@@ -13,4 +13,23 @@ export const routes: Routes = [
   { path: 'buyer-dashboard', component: BuyerDashboardComponent },
   { path: 'investor-dashboard', component: InvestorDashboardComponent },
   { path: 'admin-dashboard', component: AdminDashboardComponent }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ];
