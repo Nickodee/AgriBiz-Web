@@ -1,12 +1,75 @@
 @import "tailwindcss";
 @import 'aos/dist/aos.css';
 
+/* Testimonials Scroll Animation */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-384px * 3)); /* Width of 3 testimonial cards */
+  }
+}
 
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
 
+/* Testimonials Container Styles */
+.testimonials-container {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  padding: 20px 0;
+}
 
+.testimonials-container::before,
+.testimonials-container::after {
+  content: '';
+  height: 100%;
+  position: absolute;
+  width: 100px;
+  z-index: 2;
+  top: 0;
+  pointer-events: none;
+}
 
+.testimonials-container::before {
+  left: 0;
+  background: linear-gradient(to right, white 0%, rgba(255, 255, 255, 0) 100%);
+}
 
+.testimonials-container::after {
+  right: 0;
+  background: linear-gradient(to left, white 0%, rgba(255, 255, 255, 0) 100%);
+}
 
+/* Testimonial Card Styles */
+.testimonial-card {
+  width: 384px; /* w-96 = 24rem = 384px */
+  min-width: 384px;
+  overflow: hidden;
+  white-space: normal;
+  transition: transform 0.3s ease;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-5px);
+}
+
+.testimonial-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.5;
+}
+
+/* Pause animation on hover */
+.animate-scroll:hover {
+  animation-play-state: paused;
+}
 
 
 
