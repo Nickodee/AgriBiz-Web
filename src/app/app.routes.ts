@@ -5,6 +5,9 @@ import { RegisterComponent } from './features/auth/register/register.component';
 import { BuyerDashboardComponent } from './features/dashboards/buyer-dashboard/buyer-dashboard.component';
 import { InvestorDashboardComponent } from './features/dashboards/investor-dashboard/investor-dashboard.component';
 import { AdminDashboardComponent } from './features/dashboards/admin-dashboard/admin-dashboard.component';
+import { BuyerComponent } from './features/auth/register-components/buyer/buyer.component';
+import { InvestorComponent } from './features/auth/register-components/investor/investor.component';
+import { FarmerComponent } from './features/auth/register-components/farmer/farmer.component';
 
 export const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -12,12 +15,10 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'buyer-dashboard', component: BuyerDashboardComponent },
   { path: 'investor-dashboard', component: InvestorDashboardComponent },
-  { path: 'admin-dashboard', component: AdminDashboardComponent }
-
-
-
-
-
+  { path: 'admin-dashboard', component: AdminDashboardComponent },
+  { path: 'buyer-register', component: BuyerComponent },
+  { path: 'investor-register', component: InvestorComponent },
+  { path: 'farmer-register', component: FarmerComponent }
 
 
 
