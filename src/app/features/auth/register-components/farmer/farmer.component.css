@@ -1,0 +1,50 @@
+/* Custom styles for farmer registration form */
+.form-section {
+  @apply border-b border-gray-200 pb-6 mb-6;
+}
+
+.form-section:last-child {
+  @apply border-b-0;
+}
+
+/* Enhanced form input styles */
+input:focus,
+select:focus {
+  @apply ring-2 ring-green-500 border-green-500;
+}
+
+/* Checkbox custom styling */
+input[type="checkbox"]:checked {
+  @apply bg-green-600;
+}
+
+/* Button hover effects */
+button[type="submit"]:not(:disabled):hover {
+  @apply transform scale-105 transition-transform duration-200;
+}
+
+/* Responsive grid for crops */
+@media (max-width: 640px) {
+  .crops-grid {
+    @apply grid-cols-1;
+  }
+}
+
+/* Form validation feedback */
+.form-error {
+  @apply text-red-600 text-sm mt-1;
+}
+
+.form-success {
+  @apply text-green-600 text-sm mt-1;
+}
+
+/* Loading state */
+.loading {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+/* Back button animation */
+.back-button:hover {
+  @apply transform translate-x-1 transition-transform duration-200;
+}
