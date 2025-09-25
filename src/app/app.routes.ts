@@ -11,9 +11,23 @@ import { InvestorComponent } from './features/auth/register-components/investor/
 import { FarmerComponent } from './features/auth/register-components/farmer/farmer.component';
 import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
 import { ChangePasswordComponent } from './features/auth/change-password/change-password.component';
+import { LandingLayoutComponent } from './core/landing-layout/landing-layout.component';
+import { FarmersHomeComponent } from './features/home/farmers-home/farmers-home.component';
+import { BuyersHomeComponent } from './features/home/buyers-home/buyers-home.component';
+import { InvestorsHomeComponent } from './features/home/investors-home/investors-home.component';
 
 export const routes: Routes = [
-  { path: '', component: LandingPageComponent },
+  {
+  path: '',
+  component: LandingLayoutComponent,
+  children: [
+    { path: '', component: LandingPageComponent },
+    { path: 'farmers', component: FarmersHomeComponent },
+    { path: 'buyers', component: BuyersHomeComponent },
+    { path: 'investors', component: InvestorsHomeComponent },
+  ]
+  },
+  // { path: '', component: LandingPageComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
@@ -24,5 +38,5 @@ export const routes: Routes = [
   { path: 'farmer-dashboard', component: FarmerDashboardComponent },
   { path: 'buyer-register', component: BuyerComponent },
   { path: 'investor-register', component: InvestorComponent },
-  { path: 'farmer-register', component: FarmerComponent }
+  { path: 'farmer-register', component: FarmerComponent },
 ];

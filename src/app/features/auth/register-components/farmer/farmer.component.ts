@@ -1,89 +1,71 @@
 import { Component } from '@angular/core';
-import { RouterModule, Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterModule, Router } from '@angular/router';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-farmer',
   standalone: true,
-  imports: [RouterModule, FormsModule, CommonModule],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule],
   templateUrl: './farmer.component.html',
   styleUrl: './farmer.component.css'
 })
 export class FarmerComponent {
-  farmerData = {
-    fullName: '',
-    email: '',
-    phone: '',
-    farmName: '',
-    farmLocation: '',
-    farmSize: '',
-    farmingType: '',
-    crops: [] as string[],
-    experience: '',
-    password: '',
-    confirmPassword: '',
-    terms: false
-  };
+  registerForm: FormGroup;
+  isLoading = false;
+  errorMessage = '';
 
-  constructor(private router: Router) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
+    this.registerForm = this.fb.group({
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required]],
+      nationalId: ['', [Validators.required]],
+    }, {
+      validators: this.passwordMatchValidator
+    });
+  }
 
-  onCropChange(event: any) {
-    const cropValue = event.target.value;
-    const isChecked = event.target.checked;
-
-    if (isChecked) {
-      // Add crop to array if not already present
-      if (!this.farmerData.crops.includes(cropValue)) {
-        this.farmerData.crops.push(cropValue);
-      }
-    } else {
-      // Remove crop from array
-      const index = this.farmerData.crops.indexOf(cropValue);
-      if (index > -1) {
-        this.farmerData.crops.splice(index, 1);
-      }
-    }
+  passwordMatchValidator(form: FormGroup) {
+    const password = form.get('password');
+    const confirmPassword = form.get('confirmPassword');
+    return password && confirmPassword && password.value === confirmPassword.value ? null : { passwordMismatch: true };
   }
 
   onSubmit() {
-    if (this.validateForm()) {
-      console.log('Farmer registration data:', this.farmerData);
+    if (this.registerForm.valid) {
+      this.isLoading = true;
+      this.errorMessage = '';
 
-      // Here you would typically call your authentication service
-      // For now, we'll just show a success message and redirect
-      alert('Farmer registration successful! Please check your email for verification.');
+      const formData = {
+        ...this.registerForm.value,
+        role: 'FARMER'
+      };
 
-      // Redirect to login page
-      this.router.navigate(['/login']);
+      console.log('Farmer registration data:', formData);
+
+      this.authService.register(formData).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          // Store the token if needed
+          if (response.data?.token) {
+            localStorage.setItem('token', response.data.token);
+          }
+          // Navigate to farmer dashboard
+          this.router.navigate(['/farmer-dashboard']);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.errorMessage = error.error?.message || 'Registration failed. Please try again.';
+        }
+      });
     }
-  }
-
-  private validateForm(): boolean {
-    // Check if passwords match
-    if (this.farmerData.password !== this.farmerData.confirmPassword) {
-      alert('Passwords do not match!');
-      return false;
-    }
-
-    // Check password strength (basic validation)
-    if (this.farmerData.password.length < 6) {
-      alert('Password must be at least 6 characters long!');
-      return false;
-    }
-
-    // Check if at least one crop is selected
-    if (this.farmerData.crops.length === 0) {
-      alert('Please select at least one crop/product that you grow!');
-      return false;
-    }
-
-    // Check if terms are accepted
-    if (!this.farmerData.terms) {
-      alert('Please accept the terms and conditions!');
-      return false;
-    }
-
-    return true;
   }
 }

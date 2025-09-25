@@ -1,30 +1,71 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterModule, Router } from '@angular/router';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-investor',
   standalone: true,
-  imports: [RouterModule, FormsModule, CommonModule],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule],
   templateUrl: './investor.component.html',
   styleUrl: './investor.component.css'
 })
 export class InvestorComponent {
-  investorData = {
-    fullName: '',
-    email: '',
-    phone: '',
-    investmentType: '',
-    investmentRange: '',
-    sectors: [],
-    password: '',
-    confirmPassword: '',
-    terms: false
-  };
+  registerForm: FormGroup;
+  isLoading = false;
+  errorMessage = '';
+
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
+    this.registerForm = this.fb.group({
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required]],
+      nationalId: ['', [Validators.required]],
+    }, {
+      validators: this.passwordMatchValidator
+    });
+  }
+
+  passwordMatchValidator(form: FormGroup) {
+    const password = form.get('password');
+    const confirmPassword = form.get('confirmPassword');
+    return password && confirmPassword && password.value === confirmPassword.value ? null : { passwordMismatch: true };
+  }
 
   onSubmit() {
-    console.log('Form submitted:', this.investorData);
-    // Add your form submission logic here
+    if (this.registerForm.valid) {
+      this.isLoading = true;
+      this.errorMessage = '';
+
+      const formData = {
+        ...this.registerForm.value,
+        role: 'INVESTOR'
+      };
+
+      console.log('Investor registration data:', formData);
+
+      this.authService.register(formData).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          // Store the token if needed
+          if (response.data?.token) {
+            localStorage.setItem('token', response.data.token);
+          }
+          // Navigate to investor dashboard
+          this.router.navigate(['/investor-dashboard']);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.errorMessage = error.error?.message || 'Registration failed. Please try again.';
+        }
+      });
+    }
   }
 }

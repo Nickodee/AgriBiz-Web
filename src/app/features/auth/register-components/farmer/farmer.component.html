@@ -1,4 +1,3 @@
-
 <nav class="w-full bg-white not-last:sticky border-b px-4 border-gray-300 top-0 z-50">
   <div class="">
     <a routerLink="/" class="flex items-left py-4">
@@ -7,220 +6,122 @@
   </div>
 </nav>
 
-
 <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
-        <div class="text-center">
-            <h2 class="text-3xl font-extrabold text-gray-900">Farmer Registration</h2>
-            <p class="mt-2 text-sm text-gray-600">
-                Join our platform to connect with buyers and grow your business
-            </p>
-        </div>
+        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Sign up as a Farmer
+        </h2>
+    </div>
+    <div class="flex sm:mx-auto sm:w-full sm:max-w-md px-4 items-center justify-between space-x-4 mt-3 text-sm">
+      <a routerLink="/login" class="">Already have an account? <span class="font-semibold text-green-700 hover:underline transition-colors hover:text-green-800">Login</span></a>
+      <a routerLink="/register" class="text-green-700 hover:underline hover:text-green-800 transition-colors">Go Back</a>
     </div>
 
-    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="mt-1 sm:mx-auto sm:w-full sm:max-w-md">
         <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <form class="space-y-6" (ngSubmit)="onSubmit()" #farmerForm="ngForm">
-                <!-- Personal Information -->
-                <div class="space-y-6">
-                    <h3 class="text-lg font-medium text-gray-900">Personal Information</h3>
-
-                    <!-- Full Name -->
-                    <div>
-                        <label for="fullName" class="block text-sm font-medium text-gray-700">Full Name</label>
-                        <div class="mt-1">
-                            <input id="fullName" name="fullName" type="text" required
-                                [(ngModel)]="farmerData.fullName"
-                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                                placeholder="Enter your full name">
-                        </div>
-                    </div>
-
-                    <!-- Email -->
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
-                        <div class="mt-1">
-                            <input id="email" name="email" type="email" required
-                                [(ngModel)]="farmerData.email"
-                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                                placeholder="Enter your email">
-                        </div>
-                    </div>
-
-                    <!-- Phone Number -->
-                    <div>
-                        <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
-                        <div class="mt-1">
-                            <input id="phone" name="phone" type="tel" required
-                                [(ngModel)]="farmerData.phone"
-                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                                placeholder="Enter your phone number">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Farm Information -->
-                <div class="space-y-6">
-                    <h3 class="text-lg font-medium text-gray-900">Farm Information</h3>
-
-                    <!-- Farm Name -->
-                    <div>
-                        <label for="farmName" class="block text-sm font-medium text-gray-700">Farm Name</label>
-                        <div class="mt-1">
-                            <input id="farmName" name="farmName" type="text" required
-                                [(ngModel)]="farmerData.farmName"
-                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                                placeholder="Enter your farm name">
-                        </div>
-                    </div>
-
-                    <!-- Farm Location -->
-                    <div>
-                        <label for="farmLocation" class="block text-sm font-medium text-gray-700">Farm Location</label>
-                        <div class="mt-1">
-                            <input id="farmLocation" name="farmLocation" type="text" required
-                                [(ngModel)]="farmerData.farmLocation"
-                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                                placeholder="City, County/State">
-                        </div>
-                    </div>
-
-                    <!-- Farm Size -->
-                    <div>
-                        <label for="farmSize" class="block text-sm font-medium text-gray-700">Farm Size (in acres)</label>
-                        <div class="mt-1">
-                            <select id="farmSize" name="farmSize" required
-                                [(ngModel)]="farmerData.farmSize"
-                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
-                                <option value="">Select farm size</option>
-                                <option value="less-than-1">Less than 1 acre</option>
-                                <option value="1-5">1 - 5 acres</option>
-                                <option value="5-10">5 - 10 acres</option>
-                                <option value="10-50">10 - 50 acres</option>
-                                <option value="50-100">50 - 100 acres</option>
-                                <option value="more-than-100">More than 100 acres</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Farming Type -->
-                    <div>
-                        <label for="farmingType" class="block text-sm font-medium text-gray-700">Farming Type</label>
-                        <div class="mt-1">
-                            <select id="farmingType" name="farmingType" required
-                                [(ngModel)]="farmerData.farmingType"
-                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
-                                <option value="">Select farming type</option>
-                                <option value="organic">Organic Farming</option>
-                                <option value="conventional">Conventional Farming</option>
-                                <option value="sustainable">Sustainable Farming</option>
-                                <option value="mixed">Mixed Farming</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Crops/Products -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Crops/Products Grown</label>
-                        <div class="mt-2 grid grid-cols-2 gap-2">
-                            <div class="flex items-center">
-                                <input id="coffee" name="crops" type="checkbox" value="coffee"
-                                    (change)="onCropChange($event)"
-                                    class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
-                                <label for="coffee" class="ml-2 text-sm text-gray-700">Coffee</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input id="tea" name="crops" type="checkbox" value="tea"
-                                    (change)="onCropChange($event)"
-                                    class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
-                                <label for="tea" class="ml-2 text-sm text-gray-700">Tea</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input id="vegetables" name="crops" type="checkbox" value="vegetables"
-                                    (change)="onCropChange($event)"
-                                    class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
-                                <label for="vegetables" class="ml-2 text-sm text-gray-700">Vegetables</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input id="grains" name="crops" type="checkbox" value="grains"
-                                    (change)="onCropChange($event)"
-                                    class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
-                                <label for="grains" class="ml-2 text-sm text-gray-700">Grains</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input id="fruits" name="crops" type="checkbox" value="fruits"
-                                    (change)="onCropChange($event)"
-                                    class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
-                                <label for="fruits" class="ml-2 text-sm text-gray-700">Fruits</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input id="livestock" name="crops" type="checkbox" value="livestock"
-                                    (change)="onCropChange($event)"
-                                    class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
-                                <label for="livestock" class="ml-2 text-sm text-gray-700">Livestock</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Years of Experience -->
-                    <div>
-                        <label for="experience" class="block text-sm font-medium text-gray-700">Years of Farming Experience</label>
-                        <div class="mt-1">
-                            <select id="experience" name="experience" required
-                                [(ngModel)]="farmerData.experience"
-                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
-                                <option value="">Select experience</option>
-                                <option value="less-than-1">Less than 1 year</option>
-                                <option value="1-5">1 - 5 years</option>
-                                <option value="5-10">5 - 10 years</option>
-                                <option value="10-20">10 - 20 years</option>
-                                <option value="more-than-20">More than 20 years</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Account Security -->
-                <div class="space-y-6">
-                    <h3 class="text-lg font-medium text-gray-900">Account Security</h3>
-
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                        <div class="mt-1">
-                            <input id="password" name="password" type="password" required
-                                [(ngModel)]="farmerData.password"
-                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                                placeholder="Create a password">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
-                        <div class="mt-1">
-                            <input id="confirmPassword" name="confirmPassword" type="password" required
-                                [(ngModel)]="farmerData.confirmPassword"
-                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                                placeholder="Confirm your password">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Terms and Conditions -->
-                <div class="flex items-center">
-                    <input id="terms" name="terms" type="checkbox" required
-                        [(ngModel)]="farmerData.terms"
-                        class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
-                    <label for="terms" class="ml-2 block text-sm text-gray-900">
-                        I agree to the
-                        <a href="#" class="text-green-600 hover:text-green-500">Terms and Conditions</a>
-                    </label>
-                </div>
-
-                <!-- Submit Button -->
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+                <!-- First Name -->
                 <div>
-                    <button type="submit" [disabled]="!farmerForm.valid"
-                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-gray-400 disabled:cursor-not-allowed">
-                        Create Farmer Account
+                    <label for="firstName" class="block text-sm font-medium text-gray-700">
+                        First Name
+                    </label>
+                    <div class="mt-1">
+                        <input id="firstName" type="text" formControlName="firstName" required
+                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                        <div *ngIf="registerForm.get('firstName')?.touched && registerForm.get('firstName')?.invalid"
+                             class="mt-1 text-sm text-red-600">
+                            <span *ngIf="registerForm.get('firstName')?.errors?.['required']">First name is required</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Last Name -->
+                <div>
+                    <label for="lastName" class="block text-sm font-medium text-gray-700">
+                        Last Name
+                    </label>
+                    <div class="mt-1">
+                        <input id="lastName" type="text" formControlName="lastName" required
+                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                        <div *ngIf="registerForm.get('lastName')?.touched && registerForm.get('lastName')?.invalid"
+                             class="mt-1 text-sm text-red-600">
+                            <span *ngIf="registerForm.get('lastName')?.errors?.['required']">Last name is required</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- National ID -->
+                <div>
+                    <label for="nationalId" class="block text-sm font-medium text-gray-700">
+                        National ID
+                    </label>
+                    <div class="mt-1">
+                        <input id="nationalId" type="text" formControlName="nationalId" required
+                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                        <div *ngIf="registerForm.get('nationalId')?.touched && registerForm.get('nationalId')?.invalid"
+                             class="mt-1 text-sm text-red-600">
+                            <span *ngIf="registerForm.get('nationalId')?.errors?.['required']">National ID is required</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email Address -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">
+                        Email Address
+                    </label>
+                    <div class="mt-1">
+                        <input id="email" type="email" formControlName="email" required
+                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                        <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid"
+                             class="mt-1 text-sm text-red-600">
+                            <span *ngIf="registerForm.get('email')?.errors?.['required']">Email is required</span>
+                            <span *ngIf="registerForm.get('email')?.errors?.['email']">Please enter a valid email</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">
+                        Password
+                    </label>
+                    <div class="mt-1">
+                        <input id="password" type="password" formControlName="password" required
+                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                        <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid"
+                             class="mt-1 text-sm text-red-600">
+                            <span *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</span>
+                            <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div>
+                    <label for="confirmPassword" class="block text-sm font-medium text-gray-700">
+                        Confirm Password
+                    </label>
+                    <div class="mt-1">
+                        <input id="confirmPassword" type="password" formControlName="confirmPassword" required
+                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                        <div *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.invalid"
+                             class="mt-1 text-sm text-red-600">
+                            <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Password confirmation is required</span>
+                            <span *ngIf="registerForm.get('confirmPassword')?.errors?.['passwordMismatch']">Passwords do not match</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error Message -->
+                <div *ngIf="errorMessage" class="text-red-600 text-sm text-center">
+                    {{ errorMessage }}
+                </div>
+
+                <div>
+                    <button type="submit" [disabled]="registerForm.invalid || isLoading"
+                        class="w-full flex justify-center cursor-pointer py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50">
+                        {{ isLoading ? 'Registering...' : 'Sign up' }}
                     </button>
                 </div>
             </form>
@@ -229,7 +130,7 @@
             <div class="mt-6 text-center">
                 <p class="text-sm text-gray-600">
                     Already have an account?
-                    <a routerLink="/login" class="font-medium text-green-600 hover:text-green-500">
+                    <a routerLink="/login" class="font-medium text-green-700 hover:text-green-500">
                         Sign in here
                     </a>
                 </p>
