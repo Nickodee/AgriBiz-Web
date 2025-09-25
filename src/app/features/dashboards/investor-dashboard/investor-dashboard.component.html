@@ -39,11 +39,155 @@
                     </button>
 
                     <!-- Profile dropdown -->
-                    <div class="relative">
-                        <button type="button" class="flex items-center max-w-xs bg-white rounded-full focus:outline-none" id="user-menu-button">
+                    <div class="relative profile-dropdown-container">
+                        <button 
+                            type="button" 
+                            class="flex items-center max-w-xs bg-white rounded-full focus:outline-none hover:ring-2 hover:ring-green-500 hover:ring-offset-2 transition-all duration-200" 
+                            (click)="toggleProfileDropdown()"
+                            id="user-menu-button">
                             <span class="sr-only">Open user menu</span>
-                            <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                            <img class="h-8 w-8 rounded-full" [src]="userProfile.avatar" [alt]="userProfile.name">
                         </button>
+
+                        <!-- Profile Dropdown Menu -->
+                        <div 
+                            *ngIf="showProfileDropdown"
+                            class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 z-50 transform transition-all duration-200 ease-out"
+                            style="min-width: 320px;">
+                            
+                            <!-- User Info Header -->
+                            <div class="px-6 py-4 border-b border-gray-100">
+                                <div class="flex items-center space-x-3">
+                                    <img class="h-12 w-12 rounded-full" [src]="userProfile.avatar" [alt]="userProfile.name">
+                                    <div class="flex-1 min-w-0">
+                                        <h3 class="text-sm font-semibold text-gray-900 truncate">{{ userProfile.name }}</h3>
+                                        <p class="text-xs text-gray-600 truncate">{{ userProfile.email }}</p>
+                                        <p class="text-xs text-green-600 font-medium">{{ userProfile.investorType }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Investment Overview -->
+                            <div class="px-6 py-4 border-b border-gray-100">
+                                <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Investment Overview</h4>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-xs text-gray-500">Portfolio Value</p>
+                                        <p class="text-sm font-semibold text-gray-900">{{ userProfile.portfolioValue }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-500">Average ROI</p>
+                                        <p class="text-sm font-semibold text-green-600">{{ userProfile.averageROI }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-500">Active Investments</p>
+                                        <p class="text-sm font-semibold text-gray-900">{{ userProfile.performance.activeInvestments }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-500">Successful Exits</p>
+                                        <p class="text-sm font-semibold text-gray-900">{{ userProfile.performance.successfulExits }}</p>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <p class="text-xs text-gray-500">Risk Tolerance</p>
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 mt-1">
+                                        {{ userProfile.riskTolerance }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Investment Preferences -->
+                            <div class="px-6 py-4 border-b border-gray-100">
+                                <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Preferred Sectors</h4>
+                                <div class="flex flex-wrap gap-1">
+                                    <span 
+                                        *ngFor="let sector of userProfile.preferredSectors"
+                                        class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        {{ sector }}
+                                    </span>
+                                </div>
+                                <div class="mt-3">
+                                    <p class="text-xs text-gray-500">Investment Horizon: <span class="text-gray-900 font-medium">{{ userProfile.preferences.investmentHorizon }}</span></p>
+                                    <p class="text-xs text-gray-500 mt-1">Geographic Focus: <span class="text-gray-900 font-medium">{{ userProfile.preferences.geographicFocus.join(', ') }}</span></p>
+                                </div>
+                            </div>
+
+                            <!-- Performance Metrics -->
+                            <div class="px-6 py-4 border-b border-gray-100">
+                                <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Performance</h4>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between">
+                                        <span class="text-xs text-gray-500">Total Returns</span>
+                                        <span class="text-xs font-semibold text-green-600">{{ userProfile.totalReturns }}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-xs text-gray-500">Portfolio Growth</span>
+                                        <span class="text-xs font-semibold text-green-600">+{{ userProfile.performance.totalPortfolioGrowth }}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-xs text-gray-500">Best Investment</span>
+                                        <span class="text-xs font-medium text-gray-900 truncate ml-2">{{ userProfile.performance.bestPerformingInvestment }}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-xs text-gray-500">Member Since</span>
+                                        <span class="text-xs text-gray-900">{{ userProfile.joinedDate }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Contact Info -->
+                            <div class="px-6 py-4 border-b border-gray-100">
+                                <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Contact Information</h4>
+                                <div class="space-y-2">
+                                    <div class="flex items-center space-x-2">
+                                        <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                        </svg>
+                                        <span class="text-xs text-gray-600">{{ userProfile.phone }}</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                        <span class="text-xs text-gray-600">{{ userProfile.location }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="px-6 py-4">
+                                <div class="flex flex-col space-y-2">
+                                    <button 
+                                        (click)="editProfile()"
+                                        class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                        </svg>
+                                        Edit Profile
+                                    </button>
+                                    <div class="flex space-x-2">
+                                        <button 
+                                            (click)="openSettings()"
+                                            class="flex-1 flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                            Settings
+                                        </button>
+                                        <button 
+                                            (click)="logout()"
+                                            class="flex-1 flex items-center justify-center px-3 py-2 text-sm font-medium text-red-700 bg-red-100 rounded-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                            </svg>
+                                            Logout
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
