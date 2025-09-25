@@ -13,9 +13,9 @@
       </button>
     </div>
     <div class="hidden md:flex space-x-4 items-center">
-      <a routerLink="/farmers" class="text-gray-700 cursor-pointer hover:text-green-700 px-3 py-2 rounded transition font-medium">Farmers</a>
-      <a routerLink="/buyers" class="text-gray-700 cursor-pointer hover:text-green-700 px-3 py-2 rounded transition font-medium">Buyers</a>
-      <a routerLink="/investors" class="text-gray-700 cursor-pointer hover:text-green-700 px-3 py-2 rounded transition font-medium">Investors</a>
+      <a routerLink="/farmers" routerLinkActive="text-green-700 font-bold" class="text-gray-700 cursor-pointer hover:text-green-700 px-3 py-2 rounded transition font-medium">Farmers</a>
+      <a routerLink="/buyers" routerLinkActive="text-green-700 font-bold" class="text-gray-700 cursor-pointer hover:text-green-700 px-3 py-2 rounded transition font-medium">Buyers</a>
+      <a routerLink="/investors" routerLinkActive="text-green-700 font-bold" class="text-gray-700 cursor-pointer hover:text-green-700 px-3 py-2 rounded transition font-medium">Investors</a>
       <a routerLink="/register" class="bg-green-700 cursor-pointer text-white px-4 py-2 rounded font-bold hover:bg-green-800 transition">Sign Up</a>
       <a routerLink="/login" class="border border-green-700 cursor-pointer text-green-700 px-4 py-2 rounded font-bold hover:bg-green-50 transition">Login</a>
     </div>
@@ -25,9 +25,9 @@
   <div class="md:hidden fixed top-16 left-0 w-full z-60" [ngClass]="{'block': isMenuOpen, 'hidden': !isMenuOpen}">
     <div class="pb-3 px-2 py-2 space-y-1 flex flex-col items-left bg-white shadow">
       <div class="border-b-1 border-gray-300">
-        <a routerLink="/farmers" class="block text-gray-700 cursor-pointer hover:text-green-700 px-3 py-3 rounded transition font-medium w-full text-left">Farmers</a>
-        <a routerLink="/buyers" class="block text-gray-700 cursor-pointer hover:text-green-700 px-3 py-3 rounded transition font-medium w-full text-left">Buyers</a>
-        <a routerLink="/investors" class="block text-gray-700 cursor-pointer hover:text-green-700 px-3 py-3 rounded transition font-medium w-full text-left">Investors</a>
+        <a routerLink="/farmers" routerLinkActive="text-green-700 font-bold" class="block text-gray-700 cursor-pointer hover:text-green-700 px-3 py-3 rounded transition font-medium w-full text-left">Farmers</a>
+        <a routerLink="/buyers" routerLinkActive="text-green-700 font-bold" class="block text-gray-700 cursor-pointer hover:text-green-700 px-3 py-3 rounded transition font-medium w-full text-left">Buyers</a>
+        <a routerLink="/investors" routerLinkActive="text-green-700 font-bold" class="block text-gray-700 cursor-pointer hover:text-green-700 px-3 py-3 rounded transition font-medium w-full text-left">Investors</a>
       </div>
       <div class="flex justify-between items-center w-full gap-3 px-10 mt-2">
         <a routerLink="/register" class="block bg-green-700 text-white py-2 rounded-full font-bold hover:bg-green-800 cursor-pointer transition w-full text-center">Sign Up</a>

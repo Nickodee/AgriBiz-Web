@@ -1,0 +1,352 @@
+/* Investment Dashboard Cards Animation */
+.investment-card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.investment-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s;
+}
+
+.investment-card:hover::before {
+    left: 100%;
+}
+
+.investment-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Investment Opportunity Cards */
+.investment-opportunity-card {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.investment-opportunity-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Investment Filter Buttons */
+.investment-filter {
+    transition: all 0.3s ease;
+}
+
+.investment-filter:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.investment-filter-active {
+    box-shadow: 0 8px 25px rgba(21, 128, 61, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Performance Metrics Animation */
+.performance-metric {
+    animation: fadeInUp 0.8s ease-out forwards;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.performance-metric:nth-child(1) { animation-delay: 0.1s; }
+.performance-metric:nth-child(2) { animation-delay: 0.2s; }
+.performance-metric:nth-child(3) { animation-delay: 0.3s; }
+.performance-metric:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Investor Testimonials Styling */
+.investor-testimonials-container {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 500px;
+}
+
+.investor-testimonial-card {
+    min-width: 600px;
+    max-width: 600px;
+    margin-right: 48px;
+    height: 460px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* Slow scroll animation for investor testimonials */
+@keyframes scrollInvestor {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.animate-scroll-investor {
+    animation: scrollInvestor 45s linear infinite;
+    will-change: transform;
+}
+
+.animate-scroll-investor:hover {
+    animation-play-state: paused;
+}
+
+/* Gradient text animation */
+.bg-clip-text {
+    background-clip: text;
+    -webkit-background-clip: text;
+    animation: gradientText 4s ease-in-out infinite;
+}
+
+@keyframes gradientText {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+/* Backdrop blur effects */
+.backdrop-blur-lg {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+.backdrop-blur-sm {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* Investment calculator hover effect */
+.bg-white\/10:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-4px);
+    transition: all 0.3s ease;
+}
+
+/* Progress bar animations */
+.w-full.bg-gray-200 {
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-gradient-to-r {
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-gradient-to-r::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: progressShimmer 2s infinite;
+}
+
+@keyframes progressShimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* CTA Section animated elements */
+.animate-pulse {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.1);
+    }
+}
+
+/* Risk level indicator animations */
+.w-2.h-2.rounded-full {
+    transition: all 0.3s ease;
+}
+
+.w-2.h-2.rounded-full:hover {
+    transform: scale(1.3);
+}
+
+/* Financial grid background */
+.bg-gradient-to-br {
+    position: relative;
+}
+
+.bg-gradient-to-br::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 80%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(168, 85, 247, 0.05) 0%, transparent 50%);
+    animation: backgroundShift 10s ease-in-out infinite;
+}
+
+@keyframes backgroundShift {
+    0%, 100% {
+        opacity: 0.3;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+/* Button hover effects with financial styling */
+.hover\\:from-green-600:hover {
+    background: linear-gradient(135deg, #16a34a 0%, #10b981 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(34, 197, 94, 0.4);
+}
+
+.hover\\:bg-green-800:hover {
+    background-color: #166534;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(21, 128, 61, 0.4);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .investor-testimonial-card {
+        min-width: 400px;
+        max-width: 400px;
+        height: 480px;
+        margin-right: 24px;
+    }
+
+    .investor-testimonials-container {
+        height: 520px;
+    }
+
+    .investment-card {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .investor-testimonial-card {
+        min-width: 320px;
+        max-width: 320px;
+        height: 500px;
+    }
+
+    .investor-testimonials-container {
+        height: 540px;
+    }
+}
+
+/* Investment status indicators */
+.bg-green-600,
+.bg-blue-600,
+.bg-purple-600 {
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-green-600::after,
+.bg-blue-600::after,
+.bg-purple-600::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    animation: statusShimmer 3s infinite;
+}
+
+@keyframes statusShimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* Financial performance chart bars */
+.h-32, .h-40, .h-36, .h-44, .h-48 {
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.h-32:hover, .h-40:hover, .h-36:hover, .h-44:hover, .h-48:hover {
+    transform: scaleY(1.05);
+    filter: brightness(1.1);
+}
+
+/* Loading skeleton animation for future use */
+@keyframes skeleton {
+    0% {
+        background-position: -200px 0;
+    }
+    100% {
+        background-position: calc(200px + 100%) 0;
+    }
+}
+
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: skeleton 1.5s infinite;
+}
+
+/* Success indicators */
+.text-green-400,
+.text-blue-400,
+.text-purple-400,
+.text-orange-400 {
+    position: relative;
+}
+
+.text-green-400::before,
+.text-blue-400::before,
+.text-purple-400::before,
+.text-orange-400::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: currentColor;
+    transition: width 0.3s ease;
+}
+
+.text-green-400:hover::before,
+.text-blue-400:hover::before,
+.text-purple-400:hover::before,
+.text-orange-400:hover::before {
+    width: 100%;
+}

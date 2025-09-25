@@ -1,0 +1,136 @@
+/* Customer Testimonials Styling */
+.customer-testimonials-container {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 400px;
+}
+
+.customer-testimonial-card {
+    min-width: 480px;
+    max-width: 480px;
+    margin-right: 32px;
+    height: 360px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Slower scroll animation for business testimonials */
+@keyframes scrollSlow {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.animate-scroll-slow {
+    animation: scrollSlow 40s linear infinite;
+    will-change: transform;
+}
+
+.animate-scroll-slow:hover {
+    animation-play-state: paused;
+}
+
+/* Product card hover effects */
+.hover\\:shadow-xl:hover {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    transform: translateY(-4px);
+    transition: all 0.3s ease;
+}
+
+/* Gradient animations for hero */
+.bg-gradient-to-r {
+    background: linear-gradient(90deg, #1f2937 0%, #15803d 50%, #1f2937 100%);
+    animation: gradientShiftHorizontal 10s ease-in-out infinite;
+}
+
+@keyframes gradientShiftHorizontal {
+    0%, 100% {
+        background: linear-gradient(90deg, #1f2937 0%, #15803d 50%, #1f2937 100%);
+    }
+    50% {
+        background: linear-gradient(90deg, #15803d 0%, #1f2937 50%, #15803d 100%);
+    }
+}
+
+/* Backdrop blur support */
+.backdrop-blur-md {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.backdrop-blur-sm {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+/* Button hover effects */
+.hover\\:bg-green-800:hover {
+    background-color: #166534;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(21, 128, 61, 0.4);
+}
+
+/* Product category button active state */
+button.bg-green-700 {
+    box-shadow: 0 4px 12px rgba(21, 128, 61, 0.3);
+}
+
+/* Benefit card hover effects */
+.bg-gradient-to-br:hover {
+    transform: translateY(-4px);
+    transition: transform 0.3s ease;
+}
+
+/* Ring effect for featured CTA */
+.ring-2 {
+    animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-ring {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .customer-testimonial-card {
+        min-width: 350px;
+        max-width: 350px;
+        height: 380px;
+    }
+
+    .customer-testimonials-container {
+        height: 420px;
+    }
+}
+
+/* Trust indicator animations */
+.opacity-60 > div {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.opacity-60 > div:nth-child(1) { animation-delay: 0.1s; }
+.opacity-60 > div:nth-child(2) { animation-delay: 0.2s; }
+.opacity-60 > div:nth-child(3) { animation-delay: 0.3s; }
+.opacity-60 > div:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 0.6;
+        transform: translateY(0);
+    }
+}
