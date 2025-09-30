@@ -16,6 +16,7 @@
             "outputPath": "dist/agribiz",
             "index": "src/index.html",
             "browser": "src/main.ts",
+            "allowedCommonJsDependencies": ["aos"],
             "polyfills": [
               "zone.js"
             ],

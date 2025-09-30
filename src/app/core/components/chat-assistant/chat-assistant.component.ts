@@ -48,7 +48,7 @@ export class ChatAssistantComponent implements AfterViewChecked, OnInit, OnDestr
 
   toggleChat(): void {
     this.isOpen = !this.isOpen;
-    if (this.isOpen) {
+    if (this.isOpen && typeof window !== 'undefined') {
       setTimeout(() => this.scrollToBottom(), 100);
     }
   }
@@ -87,14 +87,18 @@ export class ChatAssistantComponent implements AfterViewChecked, OnInit, OnDestr
 
   private scrollToBottom(): void {
     try {
-      const element = this.messagesContainer.nativeElement;
-      element.scrollTop = element.scrollHeight;
+      if (this.messagesContainer?.nativeElement) {
+        const element = this.messagesContainer.nativeElement;
+        element.scrollTop = element.scrollHeight;
+      }
     } catch (err) {
       console.error('Error scrolling to bottom:', err);
     }
   }
 
   ngAfterViewChecked() {
-    this.scrollToBottom();
+    if (typeof window !== 'undefined') { // Only scroll in browser environment
+      this.scrollToBottom();
+    }
   }
 }

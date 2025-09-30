@@ -16,7 +16,7 @@
         <input
           *ngFor="let i of [1,2,3,4,5,6]"
           [formControlName]="'digit' + i"
-          [id]="'digit' + i"
+          #otpInput
           type="text"
           inputmode="numeric"
           maxlength="1"

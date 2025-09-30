@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ViewChildren, QueryList, ElementRef, PLATFORM_ID, Inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -12,6 +12,8 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrl: './email-verification.component.css'
 })
 export class EmailVerificationComponent implements OnInit {
+  @ViewChildren('otpInput') otpInputs!: QueryList<ElementRef>;
+
   verificationForm: FormGroup;
   remainingTime: number = 600; // 10 minutes in seconds
   timer: any;
@@ -22,7 +24,8 @@ export class EmailVerificationComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.verificationForm = this.fb.group({
       digit1: ['', [Validators.required, Validators.pattern('^[0-9]$')]],
@@ -37,18 +40,10 @@ export class EmailVerificationComponent implements OnInit {
   ngOnInit() {
     // Get email from registration state
     this.email = this.authService.getRegisteredEmail() || '';
-    this.startTimer();
 
-    // Auto-focus next input
-    this.verificationForm.valueChanges.subscribe(value => {
-      for (let i = 1; i <= 5; i++) {
-        const currentInput = document.getElementById(`digit${i}`) as HTMLInputElement;
-        const nextInput = document.getElementById(`digit${i + 1}`) as HTMLInputElement;
-        if (value[`digit${i}`] && nextInput) {
-          nextInput.focus();
-        }
-      }
-    });
+    if (isPlatformBrowser(this.platformId)) {
+      this.startTimer();
+    }
   }
 
   ngOnDestroy() {
@@ -74,19 +69,27 @@ export class EmailVerificationComponent implements OnInit {
   }
 
   onInput(event: any, current: number, next: number | null) {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     const input = event.target;
     const value = input.value;
 
     if (value.length === 1 && next !== null) {
-      const nextInput = document.getElementById(`digit${next}`) as HTMLInputElement;
-      if (nextInput) nextInput.focus();
+      const inputs = this.otpInputs.toArray();
+      if (inputs[next - 1]) {
+        inputs[next - 1].nativeElement.focus();
+      }
     }
   }
 
   onKeyDown(event: KeyboardEvent, current: number) {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     if (event.key === 'Backspace') {
-      const prevInput = document.getElementById(`digit${current - 1}`) as HTMLInputElement;
-      if (prevInput) prevInput.focus();
+      const inputs = this.otpInputs.toArray();
+      if (inputs[current - 2]) {
+        inputs[current - 2].nativeElement.focus();
+      }
     }
   }
 
