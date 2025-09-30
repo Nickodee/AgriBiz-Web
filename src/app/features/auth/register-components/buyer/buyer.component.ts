@@ -54,12 +54,8 @@ export class BuyerComponent {
       this.authService.register(formData).subscribe({
         next: (response) => {
           this.isLoading = false;
-          // Store the token if needed
-          if (response.data?.token) {
-            localStorage.setItem('token', response.data.token);
-          }
-          // Navigate to buyer dashboard
-          this.router.navigate(['/buyer-dashboard']);
+          // After successful registration, redirect to email verification
+          this.router.navigate(['/verify-email']);
         },
         error: (error) => {
           this.isLoading = false;

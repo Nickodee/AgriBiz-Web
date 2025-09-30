@@ -8,17 +8,30 @@ export interface RegisterRequest {
   role: 'FARMER' | 'BUYER' | 'INVESTOR';
 }
 
-export interface RegisterResponse {
+export interface ApiResponse<T> {
   success: boolean;
   message: string;
-  data?: {
-    token: string;
-    user: {
-      id: string;
-      firstName: string;
-      lastName: string;
-      email: string;
-      role: string;
-    }
-  }
+  data?: T;
 }
+
+export interface RegisterResponse extends ApiResponse<{
+  token: string;
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+  }
+}> {}
+
+export interface LoginResponse extends ApiResponse<{
+  token: string;
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+  }
+}> {}

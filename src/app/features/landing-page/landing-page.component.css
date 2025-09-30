@@ -1,0 +1,34 @@
+/* Base styles to prevent horizontal scroll */
+:host {
+  display: block;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Testimonials container styles */
+.testimonials-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.animate-scroll {
+  display: flex;
+  width: fit-content;
+  animation: scroll 30s linear infinite;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% + 100vw));
+  }
+}
+
+@media (max-width: 768px) {
+  .testimonial-card {
+    min-width: 85vw;
+  }
+}

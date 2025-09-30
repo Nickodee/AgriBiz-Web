@@ -54,12 +54,9 @@ export class InvestorComponent {
       this.authService.register(formData).subscribe({
         next: (response) => {
           this.isLoading = false;
-          // Store the token if needed
-          if (response.data?.token) {
-            localStorage.setItem('token', response.data.token);
-          }
-          // Navigate to investor dashboard
-          this.router.navigate(['/investor-dashboard']);
+          // Store email for verification and redirect to verification page
+          this.authService.setRegisteredEmail(formData.email);
+          this.router.navigate(['/verify-email']);
         },
         error: (error) => {
           this.isLoading = false;
