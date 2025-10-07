@@ -28,6 +28,16 @@ export class LoginComponent {
     });
   }
 
+  ngOnInit() {
+    // If user is already logged in, redirect to appropriate dashboard
+    if (this.authService.isLoggedIn()) {
+      const userRole = this.authService.getUserRole();
+      if (userRole) {
+        this.router.navigate([`/${userRole}-dashboard`]);
+      }
+    }
+  }
+
   onSubmit() {
     console.log('Form submitted', this.loginForm.value);
 
@@ -48,30 +58,45 @@ export class LoginComponent {
             const userData = response.data;
             const userRole = userData.user.role.toLowerCase();
 
-            console.log('User role:', userRole);
+            console.log('Original user role:', userData.user.role);
+            console.log('Normalized user role:', userRole);
             console.log('Auth token stored:', !!userData.token);
 
-            // Navigate based on user role
+            // Navigate based on user role (case-insensitive)
             let targetDashboard: string;
             switch (userRole) {
               case 'buyer':
+              case 'BUYER':
                 targetDashboard = '/buyer-dashboard';
                 break;
               case 'farmer':
+              case 'FARMER':
                 targetDashboard = '/farmer-dashboard';
                 break;
               case 'investor':
+              case 'INVESTOR':
                 targetDashboard = '/investor-dashboard';
                 break;
               case 'admin':
+              case 'ADMIN':
                 targetDashboard = '/admin-dashboard';
                 break;
               default:
                 targetDashboard = '/';
             }
 
-            console.log('Navigating to dashboard:', targetDashboard);
-            this.router.navigate([targetDashboard]);
+            // Check if there's a stored return URL
+            const returnUrl = localStorage.getItem('returnUrl');
+            console.log('Return URL found:', returnUrl);
+
+            if (returnUrl) {
+              localStorage.removeItem('returnUrl'); // Clear the stored URL
+              console.log('Navigating to stored URL:', returnUrl);
+              this.router.navigateByUrl(returnUrl);
+            } else {
+              console.log('Navigating to default dashboard:', targetDashboard);
+              this.router.navigate([targetDashboard]);
+            }
           } else {
             console.error('Login response missing required data:', response);
             this.errorMessage = response.message || 'Login failed. Please try again.';

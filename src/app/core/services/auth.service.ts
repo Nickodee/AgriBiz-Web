@@ -141,7 +141,9 @@ export class AuthService {
   getUserRole(): string | null {
     const user = localStorage.getItem('user');
     if (user) {
-      return JSON.parse(user).role;
+      const role = JSON.parse(user).role;
+      // Convert role to lowercase for consistent comparison
+      return role ? role.toLowerCase() : null;
     }
     return null;
   }

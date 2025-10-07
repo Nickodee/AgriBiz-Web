@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from './core/guards/auth.guard';
 import { LandingPageComponent } from './features/landing-page/landing-page.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
@@ -36,8 +37,28 @@ export const routes: Routes = [
   { path: 'buyer-register', component: BuyerComponent },
   { path: 'investor-register', component: InvestorComponent },
   { path: 'farmer-register', component: FarmerComponent },
-  { path: 'buyer-dashboard', component: BuyerDashboardComponent },
-  { path: 'investor-dashboard', component: InvestorDashboardComponent },
-  { path: 'admin-dashboard', component: AdminDashboardComponent },
-  { path: 'farmer-dashboard', component: FarmerDashboardComponent },
+  {
+    path: 'buyer-dashboard',
+    component: BuyerDashboardComponent,
+    canActivate: [AuthGuard],
+    data: { requiredRole: 'buyer' }
+  },
+  {
+    path: 'investor-dashboard',
+    component: InvestorDashboardComponent,
+    canActivate: [AuthGuard],
+    data: { requiredRole: 'investor' }
+  },
+  {
+    path: 'admin-dashboard',
+    component: AdminDashboardComponent,
+    canActivate: [AuthGuard],
+    data: { requiredRole: 'admin' }
+  },
+  {
+    path: 'farmer-dashboard',
+    component: FarmerDashboardComponent,
+    canActivate: [AuthGuard],
+    data: { requiredRole: 'farmer' }
+  },
 ];
