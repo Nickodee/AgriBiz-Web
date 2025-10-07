@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-change-password',
@@ -26,63 +27,70 @@ export class ChangePasswordComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
-    // Get reset token from URL query parameters
+    // First check URL parameters for token
     this.route.queryParams.subscribe(params => {
       this.resetToken = params['token'];
+
+      // If no token in URL, check localStorage
+      if (!this.resetToken) {
+        this.resetToken = localStorage.getItem('resetToken') || '';
+      }
+
       if (this.resetToken) {
-        this.validateResetToken();
+        console.log('Reset token found:', {
+          source: params['token'] ? 'URL' : 'localStorage',
+          tokenLength: this.resetToken.length,
+          tokenPreview: `${this.resetToken.substring(0, 4)}...${this.resetToken.substring(this.resetToken.length - 4)}`
+        });
+        this.isValidToken = true;
       } else {
+        console.error('No reset token found in URL or localStorage');
         this.isValidToken = false;
+        this.router.navigate(['/forgot-password']);
       }
     });
   }
 
-  validateResetToken() {
-    // In a real app, you would validate the token with your backend
-    // For demo purposes, we'll accept any token that looks valid
-    if (this.resetToken && this.resetToken.length > 10) {
-      this.isValidToken = true;
-      console.log('Validating reset token:', this.resetToken);
-    } else {
-      this.isValidToken = false;
-    }
-  }
-
   onSubmit() {
     if (this.validateForm()) {
-      this.changePassword();
+      this.resetPassword();
     }
   }
 
-  changePassword() {
+  resetPassword() {
     this.isLoading = true;
     this.errorMessage = '';
 
-    // Simulate API call - replace with actual service call
-    setTimeout(() => {
-      // Simulate random success/failure for demo
-      const success = Math.random() > 0.1; // 90% success rate
+    if (!this.resetToken) {
+      this.errorMessage = 'Reset token not found. Please try the password reset process again.';
+      this.isLoading = false;
+      return;
+    }
 
-      if (success) {
+    this.authService.resetPassword(this.resetToken, this.changePasswordData.newPassword).subscribe({
+      next: (response) => {
+        console.log('Password reset successful:', response);
         this.passwordChanged = true;
-        this.isLoading = false;
-        
-        // Here you would make an actual API call to change the password
-        console.log('Password changed successfully for token:', this.resetToken);
-        
+
         // Auto-redirect to login after 3 seconds
         setTimeout(() => {
           this.router.navigate(['/login']);
         }, 3000);
-      } else {
+      },
+      error: (error) => {
+        console.error('Password reset error:', error);
+        this.errorMessage = error.error?.message || 'Failed to reset password. Please try again.';
         this.isLoading = false;
-        this.errorMessage = 'Failed to update password. Please try again.';
+      },
+      complete: () => {
+        this.isLoading = false;
       }
-    }, 2000);
+    });
   }
 
   validateForm(): boolean {
@@ -117,25 +125,25 @@ export class ChangePasswordComponent implements OnInit {
 
   getPasswordStrength(): 'weak' | 'medium' | 'strong' {
     const password = this.changePasswordData.newPassword;
-    
+
     if (password.length < 6) {
       return 'weak';
     }
 
     let score = 0;
-    
+
     // Length check
     if (password.length >= 8) score++;
-    
+
     // Contains lowercase
     if (/[a-z]/.test(password)) score++;
-    
-    // Contains uppercase  
+
+    // Contains uppercase
     if (/[A-Z]/.test(password)) score++;
-    
+
     // Contains numbers
     if (/\d/.test(password)) score++;
-    
+
     // Contains special characters
     if (/[^A-Za-z0-9]/.test(password)) score++;
 

@@ -83,14 +83,43 @@ export class AuthService {
   }
 
   forgotPassword(email: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+    console.log('Sending forgot password request for email:', email);
+    return this.http.post<{success: boolean; message: string; data?: {token: string}}>(`${this.apiUrl}/forgot-password`, { email }).pipe(
+      tap(response => {
+        console.log('Forgot password response:', response);
+        // Store reset token if it's in the response
+        if (response?.data?.token) {
+          console.log('Storing reset token in localStorage:', response.data.token);
+          localStorage.setItem('resetToken', response.data.token);
+        }
+      })
+    );
   }
 
   resetPassword(token: string, newPassword: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/reset-password`, {
-      token,
-      newPassword,
+    // Log the input parameters
+    console.log('Resetting password with:', {
+      token: token,
+      passwordLength: newPassword.length // Don't log the actual password
     });
+
+    const payload = {
+      token: token, // Use provided token or get from localStorage
+      newPassword: newPassword
+    };
+
+    console.log('Sending reset password request with payload:', {
+      ...payload,
+      newPassword: '[REDACTED]' // Don't log the actual password
+    });
+
+    return this.http.post(`${this.apiUrl}/reset-password`, payload).pipe(
+      tap(response => {
+        console.log('Reset password response:', response);
+        // Clear the reset token after successful reset
+        localStorage.removeItem('resetToken');
+      })
+    );
   }
 
   changePassword(oldPassword: string, newPassword: string): Observable<any> {

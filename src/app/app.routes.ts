@@ -32,7 +32,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'verify-email', component: EmailVerificationComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
-  { path: 'change-password', component: ChangePasswordComponent },
+  { path: 'reset-password', component: ChangePasswordComponent },
   { path: 'buyer-register', component: BuyerComponent },
   { path: 'investor-register', component: InvestorComponent },
   { path: 'farmer-register', component: FarmerComponent },

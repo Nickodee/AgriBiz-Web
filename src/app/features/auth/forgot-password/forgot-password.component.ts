@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -21,7 +22,10 @@ export class ForgotPasswordComponent {
   resendCooldown = 0;
   private resendTimer: any;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   ngOnDestroy() {
     if (this.resendTimer) {
@@ -39,30 +43,21 @@ export class ForgotPasswordComponent {
     this.isLoading = true;
     this.errorMessage = '';
 
-    // Simulate API call - replace with actual service call
-    setTimeout(() => {
-      // Simulate random success/failure for demo
-      const success = Math.random() > 0.2; // 80% success rate
-
-      if (success) {
+    this.authService.forgotPassword(this.forgotPasswordData.email).subscribe({
+      next: (response) => {
+        console.log('Reset password email sent:', response);
         this.emailSent = true;
-        this.isLoading = false;
         this.startResendCooldown();
-        
-        // Here you would make an actual API call to send the reset email
-        console.log('Password reset email sent to:', this.forgotPasswordData.email);
-        
-        // For demo purposes, generate a reset token and log the reset URL
-        const resetToken = this.generateResetToken();
-        const resetUrl = `${window.location.origin}/change-password?token=${resetToken}`;
-        console.log('Reset URL (for demo):', resetUrl);
-        
-        // In a real app, this URL would be sent via email to the user
-      } else {
+      },
+      error: (error) => {
+        console.error('Reset password email error:', error);
+        this.errorMessage = error.error?.message || 'Failed to send reset email. Please try again.';
         this.isLoading = false;
-        this.errorMessage = 'Email address not found. Please check your email and try again.';
+      },
+      complete: () => {
+        this.isLoading = false;
       }
-    }, 2000);
+    });
   }
 
   resendEmail() {
