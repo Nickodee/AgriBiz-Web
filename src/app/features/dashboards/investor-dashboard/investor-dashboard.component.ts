@@ -1,5 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-investor-dashboard',
@@ -70,9 +72,27 @@ export class InvestorDashboardComponent {
     // Navigate to settings page
   }
 
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
+
   logout() {
-    console.log('Logging out investor...');
-    // Implement logout functionality
-    // Clear session, redirect to login
+    console.log('Initiating investor logout...');
+    this.showProfileDropdown = false;
+
+    this.authService.logout().subscribe({
+      next: (response) => {
+        console.log('Logout successful:', response);
+        this.authService.clearAuth(); // Clear local storage
+        this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        console.error('Logout error:', error);
+        // Even if the API call fails, clear local storage and redirect
+        this.authService.clearAuth();
+        this.router.navigate(['/login']);
+      }
+    });
   }
 }

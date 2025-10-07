@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-farmer-dashboard',
@@ -48,10 +49,28 @@ export class FarmerDashboardComponent {
     this.closeProfileDropdown();
   }
 
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
+
   logout() {
-    // Implement logout functionality
-    console.log('Logout clicked');
+    console.log('Initiating farmer logout...');
     this.closeProfileDropdown();
+
+    this.authService.logout().subscribe({
+      next: (response) => {
+        console.log('Logout successful:', response);
+        this.authService.clearAuth(); // Clear local storage
+        this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        console.error('Logout error:', error);
+        // Even if the API call fails, clear local storage and redirect
+        this.authService.clearAuth();
+        this.router.navigate(['/login']);
+      }
+    });
   }
 
   // Sample data - replace with actual data from service
