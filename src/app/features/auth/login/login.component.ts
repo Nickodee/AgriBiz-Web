@@ -29,43 +29,72 @@ export class LoginComponent {
   }
 
   onSubmit() {
+    console.log('Form submitted', this.loginForm.value);
+
     if (this.loginForm.valid) {
       this.isLoading = true;
       this.errorMessage = '';
 
       const credentials = this.loginForm.value;
 
+      console.log('Attempting login with email:', credentials.email);
+
       this.authService.login(credentials).subscribe({
         next: (response) => {
+          console.log('Login successful:', response);
           this.isLoading = false;
 
-          if (response.success && response.data) {
+          if (response.success && response.data?.user) {
             const userData = response.data;
+            const userRole = userData.user.role.toLowerCase();
+
+            console.log('User role:', userRole);
+            console.log('Auth token stored:', !!userData.token);
 
             // Navigate based on user role
-            switch (userData.user.role.toLowerCase()) {
+            let targetDashboard: string;
+            switch (userRole) {
               case 'buyer':
-                this.router.navigate(['/buyer-dashboard']);
+                targetDashboard = '/buyer-dashboard';
                 break;
               case 'farmer':
-                this.router.navigate(['/farmer-dashboard']);
+                targetDashboard = '/farmer-dashboard';
                 break;
               case 'investor':
-                this.router.navigate(['/investor-dashboard']);
+                targetDashboard = '/investor-dashboard';
                 break;
               case 'admin':
-                this.router.navigate(['/admin-dashboard']);
+                targetDashboard = '/admin-dashboard';
                 break;
               default:
-                this.router.navigate(['/']);
+                targetDashboard = '/';
             }
+
+            console.log('Navigating to dashboard:', targetDashboard);
+            this.router.navigate([targetDashboard]);
           } else {
-            this.errorMessage = 'Login failed. Please try again.';
+            console.error('Login response missing required data:', response);
+            this.errorMessage = response.message || 'Login failed. Please try again.';
           }
         },
         error: (error) => {
+          console.error('Login error:', error);
           this.isLoading = false;
-          this.errorMessage = error.error?.message || 'Login failed. Please try again.';
+          if (error.status === 401) {
+            this.errorMessage = 'Invalid email or password.';
+          } else if (error.status === 403) {
+            this.errorMessage = 'Account not verified. Please verify your email first.';
+          } else {
+            this.errorMessage = error.error?.message || 'Login failed. Please try again.';
+          }
+        }
+      });
+    } else {
+      console.log('Form validation failed:', this.loginForm.errors);
+      Object.keys(this.loginForm.controls).forEach(key => {
+        const control = this.loginForm.get(key);
+        if (control?.errors) {
+          console.log(`${key} field errors:`, control.errors);
         }
       });
     }

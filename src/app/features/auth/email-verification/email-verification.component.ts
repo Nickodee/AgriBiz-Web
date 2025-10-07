@@ -19,7 +19,10 @@ export class EmailVerificationComponent implements OnInit {
   timer: any;
   email: string = '';
   isResending: boolean = false;
+  isVerifying: boolean = false;
   errorMessage: string = '';
+  successMessage: string = '';
+  showSuccessAlert: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -40,6 +43,15 @@ export class EmailVerificationComponent implements OnInit {
   ngOnInit() {
     // Get email from registration state
     this.email = this.authService.getRegisteredEmail() || '';
+    console.log('Initialized email verification component:', {
+      email: this.email,
+      hasEmail: !!this.email
+    });
+
+    if (!this.email) {
+      console.warn('No email found in registration state');
+      this.errorMessage = 'Email not found. Please try registering again.';
+    }
 
     if (isPlatformBrowser(this.platformId)) {
       this.startTimer();
@@ -93,27 +105,95 @@ export class EmailVerificationComponent implements OnInit {
     }
   }
 
-  async onSubmit() {
+  onSubmit() {
+    console.log('Form submission attempt:', {
+      isValid: this.verificationForm.valid,
+      formValue: this.verificationForm.value,
+      email: this.email
+    });
+
     if (this.verificationForm.valid) {
+      this.isVerifying = true;
+      this.errorMessage = '';
+      this.successMessage = '';
+
       const otp = Object.values(this.verificationForm.value).join('');
-      try {
-        await this.authService.verifyEmail(otp);
-        // Navigate to login on success
-        this.router.navigate(['/login']); // Changed from /auth/login to /login to match routes
-      } catch (error: any) {
-        this.errorMessage = error.message || 'Verification failed. Please try again.';
-      }
+      console.log('Submitting OTP:', otp);
+
+      this.authService.verifyEmail(otp).subscribe({
+        next: (response: any) => {
+          console.log('Verification success:', response);
+          this.successMessage = 'Email verified successfully! Redirecting to login...';
+          this.showSuccessAlert = true;
+
+          // Wait for 2 seconds to show the success message before redirecting
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 2000);
+        },
+        error: (error: any) => {
+          console.error('Verification error:', error);
+          this.errorMessage = error.error?.message || error.message || 'Verification failed. Please try again.';
+          this.verificationForm.reset();
+
+          // Focus on the first input after error
+          if (isPlatformBrowser(this.platformId)) {
+            setTimeout(() => {
+              const inputs = this.otpInputs.toArray();
+              if (inputs[0]) {
+                inputs[0].nativeElement.focus();
+              }
+            });
+          }
+        },
+        complete: () => {
+          console.log('Verification request completed');
+          this.isVerifying = false;
+        }
+      });
+    } else {
+      console.log('Form validation failed:', {
+        errors: this.verificationForm.errors,
+        controls: Object.keys(this.verificationForm.controls).reduce((acc: any, key: string) => {
+          acc[key] = {
+            errors: this.verificationForm.get(key)?.errors,
+            value: this.verificationForm.get(key)?.value
+          };
+          return acc;
+        }, {})
+      });
     }
   }
 
   async resendCode() {
     if (!this.isResending) {
       this.isResending = true;
+      this.errorMessage = '';
+      this.successMessage = '';
+
       try {
         await this.authService.resendVerificationCode(this.email);
+        this.successMessage = 'New verification code sent successfully!';
         this.remainingTime = 600; // Reset timer to 10 minutes
         this.startTimer();
         this.verificationForm.reset();
+
+        // Clear success message after 3 seconds
+        setTimeout(() => {
+          if (this.successMessage === 'New verification code sent successfully!') {
+            this.successMessage = '';
+          }
+        }, 3000);
+
+        // Focus on first input
+        if (isPlatformBrowser(this.platformId)) {
+          setTimeout(() => {
+            const inputs = this.otpInputs.toArray();
+            if (inputs[0]) {
+              inputs[0].nativeElement.focus();
+            }
+          });
+        }
       } catch (error: any) {
         this.errorMessage = error.message || 'Failed to resend code. Please try again.';
       } finally {

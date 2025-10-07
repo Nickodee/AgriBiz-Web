@@ -21,10 +21,17 @@ export class AuthService {
   login(credentials: { email: string; password: string }): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap(response => {
-        // Store auth token if it exists
+        // Log the response data
+        console.log('Login Response:', {
+          success: response.success,
+          message: response.message,
+          userData: response.data
+        });
+
+        // Store auth token and user data if they exist
         if (response.data?.token) {
+          console.log('Storing auth token and user data');
           localStorage.setItem('token', response.data.token);
-          // Store user data for future use
           localStorage.setItem('user', JSON.stringify(response.data.user));
         }
       })
@@ -48,11 +55,27 @@ export class AuthService {
 
   verifyEmail(otp: string): Observable<any> {
     const email = this.getRegisteredEmail();
+    console.log('Verifying email:', { email, otp });
+
+    if (!email) {
+      console.error('No email found in registeredEmailSubject');
+      throw new Error('Email not found. Please try registering again.');
+    }
+
     // Send email and OTP in the exact format required by the backend
     return this.http.post(`${this.apiUrl}/verify-email`, {
       email,
       otp
-    });
+    }).pipe(
+      tap(
+        response => {
+          console.log('Verification response:', response);
+        },
+        error => {
+          console.error('Verification error:', error);
+        }
+      )
+    );
   }
 
   resendVerificationCode(email: string): Observable<any> {
