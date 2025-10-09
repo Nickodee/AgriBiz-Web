@@ -53,12 +53,18 @@ export class FarmerComponent {
 
       this.authService.register(formData).subscribe({
         next: (response) => {
+          console.log('Registration response:', response);
           this.isLoading = false;
-          // Store email for verification and redirect to verification page
+
+          // Store the email for verification
           this.authService.setRegisteredEmail(formData.email);
+          console.log('Stored email for verification:', formData.email);
+
+          // After successful registration, redirect to email verification
           this.router.navigate(['/verify-email']);
         },
         error: (error) => {
+          console.error('Registration error:', error);
           this.isLoading = false;
           this.errorMessage = error.error?.message || 'Registration failed. Please try again.';
         }

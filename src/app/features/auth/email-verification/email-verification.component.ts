@@ -45,12 +45,26 @@ export class EmailVerificationComponent implements OnInit {
     this.email = this.authService.getRegisteredEmail() || '';
     console.log('Initialized email verification component:', {
       email: this.email,
-      hasEmail: !!this.email
+      hasEmail: !!this.email,
+      storedValue: localStorage.getItem('registeredEmail') // Debug: check localStorage directly
     });
 
     if (!this.email) {
       console.warn('No email found in registration state');
-      this.errorMessage = 'Email not found. Please try registering again.';
+      // Try to get email from localStorage directly as fallback
+      const storedEmail = localStorage.getItem('registeredEmail');
+      if (storedEmail) {
+        console.log('Retrieved email from localStorage:', storedEmail);
+        this.email = storedEmail;
+        this.authService.setRegisteredEmail(storedEmail); // Restore it to the service
+      } else {
+        console.error('No email found in localStorage either');
+        this.errorMessage = 'Email not found. Please try registering again.';
+        // Redirect back to registration after a delay
+        setTimeout(() => {
+          this.router.navigate(['/register']);
+        }, 3000);
+      }
     }
 
     if (isPlatformBrowser(this.platformId)) {

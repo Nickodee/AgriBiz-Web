@@ -12,10 +12,18 @@ export class AuthService {
   private apiUrl = `${environment.apiUrl}/api/v1/auth`;
   private registeredEmailSubject = new BehaviorSubject<string>('');
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Initialize the BehaviorSubject with any stored email
+    const storedEmail = localStorage.getItem('registeredEmail');
+    if (storedEmail) {
+      this.registeredEmailSubject.next(storedEmail);
+    }
+  }
 
   setRegisteredEmail(email: string) {
+    console.log('Setting registered email:', email);
     this.registeredEmailSubject.next(email);
+    localStorage.setItem('registeredEmail', email);
   }
 
   login(credentials: { email: string; password: string }): Observable<LoginResponse> {
@@ -50,7 +58,12 @@ export class AuthService {
   }
 
   getRegisteredEmail(): string {
-    return this.registeredEmailSubject.getValue();
+    const email = this.registeredEmailSubject.getValue();
+    console.log('Getting registered email:', {
+      fromSubject: email,
+      fromStorage: localStorage.getItem('registeredEmail')
+    });
+    return email || localStorage.getItem('registeredEmail') || '';
   }
 
   verifyEmail(otp: string): Observable<any> {
@@ -58,7 +71,7 @@ export class AuthService {
     console.log('Verifying email:', { email, otp });
 
     if (!email) {
-      console.error('No email found in registeredEmailSubject');
+      console.error('No email found in registeredEmailSubject or localStorage');
       throw new Error('Email not found. Please try registering again.');
     }
 
