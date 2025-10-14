@@ -1,0 +1,78 @@
+/* Conversation list animations */
+.conversation {
+  transition: background-color 0.2s ease;
+}
+
+/* Message bubble animations */
+.message-bubble {
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.message-bubble.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Custom scrollbar */
+.overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+}
+
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5);
+  border-radius: 3px;
+}
+
+/* Message input transitions */
+.message-input {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Status indicators */
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.status-online {
+  background-color: #10B981;
+}
+
+.status-offline {
+  background-color: #6B7280;
+}
+
+/* Message status indicators */
+.message-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.message-status-icon {
+  width: 12px;
+  height: 12px;
+}
+
+/* Hover effects */
+.hover-effect {
+  transition: transform 0.2s ease;
+}
+
+.hover-effect:hover {
+  transform: translateY(-1px);
+}
