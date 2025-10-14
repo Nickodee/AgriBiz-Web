@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { RegisterRequest, RegisterResponse, LoginResponse } from '../interfaces/auth.interface';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -12,18 +13,29 @@ export class AuthService {
   private apiUrl = `${environment.apiUrl}/api/v1/auth`;
   private registeredEmailSubject = new BehaviorSubject<string>('');
 
-  constructor(private http: HttpClient) {
+  private isBrowser: boolean;
+
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+
     // Initialize the BehaviorSubject with any stored email
-    const storedEmail = localStorage.getItem('registeredEmail');
-    if (storedEmail) {
-      this.registeredEmailSubject.next(storedEmail);
+    if (this.isBrowser) {
+      const storedEmail = localStorage.getItem('registeredEmail');
+      if (storedEmail) {
+        this.registeredEmailSubject.next(storedEmail);
+      }
     }
   }
 
   setRegisteredEmail(email: string) {
     console.log('Setting registered email:', email);
     this.registeredEmailSubject.next(email);
-    localStorage.setItem('registeredEmail', email);
+    if (this.isBrowser) {
+      localStorage.setItem('registeredEmail', email);
+    }
   }
 
   login(credentials: { email: string; password: string }): Observable<LoginResponse> {
@@ -37,7 +49,7 @@ export class AuthService {
         });
 
         // Store auth token and user data if they exist
-        if (response.data?.token) {
+        if (response.data?.token && this.isBrowser) {
           console.log('Storing auth token and user data');
           localStorage.setItem('token', response.data.token);
           localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -59,11 +71,12 @@ export class AuthService {
 
   getRegisteredEmail(): string {
     const email = this.registeredEmailSubject.getValue();
+    const storageEmail = this.isBrowser ? localStorage.getItem('registeredEmail') : null;
     console.log('Getting registered email:', {
       fromSubject: email,
-      fromStorage: localStorage.getItem('registeredEmail')
+      fromStorage: storageEmail
     });
-    return email || localStorage.getItem('registeredEmail') || '';
+    return email || storageEmail || '';
   }
 
   verifyEmail(otp: string): Observable<any> {
@@ -101,7 +114,7 @@ export class AuthService {
       tap(response => {
         console.log('Forgot password response:', response);
         // Store reset token if it's in the response
-        if (response?.data?.token) {
+        if (response?.data?.token && this.isBrowser) {
           console.log('Storing reset token in localStorage:', response.data.token);
           localStorage.setItem('resetToken', response.data.token);
         }
@@ -130,7 +143,9 @@ export class AuthService {
       tap(response => {
         console.log('Reset password response:', response);
         // Clear the reset token after successful reset
-        localStorage.removeItem('resetToken');
+        if (this.isBrowser) {
+          localStorage.removeItem('resetToken');
+        }
       })
     );
   }
@@ -152,6 +167,8 @@ export class AuthService {
 
   // Helper methods for user role management
   getUserRole(): string | null {
+    if (!this.isBrowser) return null;
+
     const user = localStorage.getItem('user');
     if (user) {
       const role = JSON.parse(user).role;
@@ -162,10 +179,12 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
+    if (!this.isBrowser) return false;
     return !!localStorage.getItem('token');
   }
 
   clearAuth(): void {
+    if (!this.isBrowser) return;
     localStorage.removeItem('token');
     localStorage.removeItem('user');
   }
