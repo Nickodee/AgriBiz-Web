@@ -1,1 +1,218 @@
-<p>settings works!</p>
+<div class="min-h-screen bg-gray-100 py-6 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-2xl font-bold text-gray-900">Account Settings</h1>
+      <p class="mt-1 text-sm text-gray-500">Manage your account settings and preferences</p>
+    </div>
+
+    <!-- Settings Sections -->
+    <div class="space-y-6">
+      <!-- Profile Section -->
+      <div class="bg-white shadow rounded-lg overflow-hidden">
+        <div class="p-6">
+          <h2 class="text-lg font-medium text-gray-900 mb-4">Profile Information</h2>
+          <div class="space-y-4">
+            <!-- Avatar -->
+            <div class="flex items-center space-x-4">
+              <img [src]="profile.avatar || 'assets/default-avatar.png'"
+                   [alt]="profile.name"
+                   class="w-20 h-20 rounded-full object-cover">
+              <div>
+                <button (click)="uploadAvatar()" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                  Change Photo
+                </button>
+              </div>
+            </div>
+
+            <!-- Name -->
+            <div>
+              <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+              <input type="text" id="name" [(ngModel)]="profile.name"
+                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+            </div>
+
+            <!-- Email -->
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+              <input type="email" id="email" [(ngModel)]="profile.email" readonly
+                     class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm">
+              <p class="mt-1 text-sm text-gray-500">Email cannot be changed. Contact support for assistance.</p>
+            </div>
+
+            <!-- Phone -->
+            <div>
+              <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+              <input type="tel" id="phone" [(ngModel)]="profile.phone"
+                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+            </div>
+
+            <!-- Location -->
+            <div>
+              <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
+              <input type="text" id="location" [(ngModel)]="profile.location"
+                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Business Information -->
+      <div class="bg-white shadow rounded-lg overflow-hidden">
+        <div class="p-6">
+          <h2 class="text-lg font-medium text-gray-900 mb-4">Business Information</h2>
+          <div class="space-y-4">
+            <!-- Business Name -->
+            <div>
+              <label for="businessName" class="block text-sm font-medium text-gray-700">Business Name</label>
+              <input type="text" id="businessName" [(ngModel)]="business.name"
+                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+            </div>
+
+            <!-- Business Type -->
+            <div>
+              <label for="businessType" class="block text-sm font-medium text-gray-700">Business Type</label>
+              <select id="businessType" [(ngModel)]="business.type"
+                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                <option value="individual">Individual Farmer</option>
+                <option value="cooperative">Cooperative</option>
+                <option value="company">Company</option>
+              </select>
+            </div>
+
+            <!-- Registration Number -->
+            <div>
+              <label for="regNumber" class="block text-sm font-medium text-gray-700">Registration Number</label>
+              <input type="text" id="regNumber" [(ngModel)]="business.registrationNumber"
+                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+            </div>
+
+            <!-- Tax ID -->
+            <div>
+              <label for="taxId" class="block text-sm font-medium text-gray-700">Tax ID</label>
+              <input type="text" id="taxId" [(ngModel)]="business.taxId"
+                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications -->
+      <div class="bg-white shadow rounded-lg overflow-hidden">
+        <div class="p-6">
+          <h2 class="text-lg font-medium text-gray-900 mb-4">Notification Preferences</h2>
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-sm font-medium text-gray-900">Email Notifications</h3>
+                <p class="text-sm text-gray-500">Receive updates about orders and account activity</p>
+              </div>
+              <button (click)="notifications.email = !notifications.email"
+                      [class.bg-green-600]="notifications.email"
+                      [class.bg-gray-200]="!notifications.email"
+                      class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                <span [class.translate-x-5]="notifications.email"
+                      [class.translate-x-0]="!notifications.email"
+                      class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+              </button>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-sm font-medium text-gray-900">SMS Notifications</h3>
+                <p class="text-sm text-gray-500">Get text messages for important updates</p>
+              </div>
+              <button (click)="notifications.sms = !notifications.sms"
+                      [class.bg-green-600]="notifications.sms"
+                      [class.bg-gray-200]="!notifications.sms"
+                      class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                <span [class.translate-x-5]="notifications.sms"
+                      [class.translate-x-0]="!notifications.sms"
+                      class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+              </button>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-sm font-medium text-gray-900">Marketing Communications</h3>
+                <p class="text-sm text-gray-500">Receive updates about promotions and news</p>
+              </div>
+              <button (click)="notifications.marketing = !notifications.marketing"
+                      [class.bg-green-600]="notifications.marketing"
+                      [class.bg-gray-200]="!notifications.marketing"
+                      class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                <span [class.translate-x-5]="notifications.marketing"
+                      [class.translate-x-0]="!notifications.marketing"
+                      class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Security -->
+      <div class="bg-white shadow rounded-lg overflow-hidden">
+        <div class="p-6">
+          <h2 class="text-lg font-medium text-gray-900 mb-4">Security Settings</h2>
+          <div class="space-y-4">
+            <!-- Change Password -->
+            <div>
+              <h3 class="text-sm font-medium text-gray-900 mb-2">Change Password</h3>
+              <div class="space-y-3">
+                <div>
+                  <label for="currentPassword" class="block text-sm font-medium text-gray-700">Current Password</label>
+                  <input type="password" id="currentPassword" [(ngModel)]="security.currentPassword"
+                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                </div>
+                <div>
+                  <label for="newPassword" class="block text-sm font-medium text-gray-700">New Password</label>
+                  <input type="password" id="newPassword" [(ngModel)]="security.newPassword"
+                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                </div>
+                <div>
+                  <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm New Password</label>
+                  <input type="password" id="confirmPassword" [(ngModel)]="security.confirmPassword"
+                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                </div>
+                <button (click)="changePassword()"
+                        class="mt-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                  Update Password
+                </button>
+              </div>
+            </div>
+
+            <!-- Two-Factor Authentication -->
+            <div class="pt-4 border-t border-gray-200">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-sm font-medium text-gray-900">Two-Factor Authentication</h3>
+                  <p class="text-sm text-gray-500">Add an extra layer of security to your account</p>
+                </div>
+                <button (click)="security.twoFactor = !security.twoFactor"
+                        [class.bg-green-600]="security.twoFactor"
+                        [class.bg-gray-200]="!security.twoFactor"
+                        class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                  <span [class.translate-x-5]="security.twoFactor"
+                        [class.translate-x-0]="!security.twoFactor"
+                        class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Save Changes -->
+      <div class="flex justify-end space-x-4">
+        <button (click)="resetChanges()"
+                class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+          Reset Changes
+        </button>
+        <button (click)="saveChanges()"
+                class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+          Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

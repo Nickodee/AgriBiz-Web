@@ -1,0 +1,103 @@
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Smooth transitions */
+input, select, button {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Custom focus styles */
+input:focus, select:focus {
+  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
+}
+
+/* Custom select arrow */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+}
+
+/* Loading state for buttons */
+button.loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+button.loading::after {
+  content: '';
+  position: absolute;
+  width: 1em;
+  height: 1em;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: button-loading-spinner 0.6s linear infinite;
+  right: 0.5rem;
+  top: calc(50% - 0.5em);
+}
+
+@keyframes button-loading-spinner {
+  from {
+    transform: rotate(0turn);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/* Password strength indicator */
+.password-strength {
+  height: 4px;
+  border-radius: 2px;
+  margin-top: 0.5rem;
+  background: #e5e7eb;
+  overflow: hidden;
+}
+
+.password-strength div {
+  height: 100%;
+  width: 0;
+  transition: width 0.3s ease-in-out;
+}
+
+.password-strength.weak div {
+  width: 33.33%;
+  background-color: #ef4444;
+}
+
+.password-strength.medium div {
+  width: 66.66%;
+  background-color: #f59e0b;
+}
+
+.password-strength.strong div {
+  width: 100%;
+  background-color: #10b981;
+}
+
+/* Avatar upload hover effect */
+.avatar-upload:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
