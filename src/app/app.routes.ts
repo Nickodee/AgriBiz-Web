@@ -26,6 +26,14 @@ import { FarmHealthComponent } from './core/components/farmer-components/farm-he
 import { MessagesComponent } from './core/components/farmer-components/messages/messages.component';
 import { SettingsComponent } from './core/components/farmer-components/settings/settings.component';
 
+// Buyer Components
+import { BuyerDashComponent } from './core/components/buyer-components/buyer-dash/buyer-dash.component';
+import { MarketplaceComponent } from './core/components/buyer-components/marketplace/marketplace.component';
+import { MyOrdersComponent } from './core/components/buyer-components/my-orders/my-orders.component';
+import { SchuduleDeliveriesComponent } from './core/components/buyer-components/schudule-deliveries/schudule-deliveries.component';
+import { WishListComponent } from './core/components/buyer-components/wish-list/wish-list.component';
+import { MessagesComponent as BuyerMessagesComponent } from './core/components/buyer-components/messages/messages.component';
+
 // Landing and Home Components
 import { LandingLayoutComponent } from './core/landing-layout/landing-layout.component';
 import { LandingPageComponent } from './features/landing-page/landing-page.component';
@@ -61,7 +69,16 @@ export const routes: Routes = [
     path: 'buyer-dashboard',
     component: BuyerDashboardComponent,
     canActivate: [AuthGuard],
-    data: { requiredRole: 'buyer' }
+    data: { requiredRole: 'buyer' },
+    children: [
+      { path: '', pathMatch: 'full', redirectTo: 'dash' },
+      { path: 'dash', component: BuyerDashComponent },
+      { path: 'marketplace', component: MarketplaceComponent },
+      { path: 'orders', component: MyOrdersComponent },
+      { path: 'deliveries', component: SchuduleDeliveriesComponent },
+      { path: 'wishlist', component: WishListComponent },
+      { path: 'messages', component: BuyerMessagesComponent }
+    ]
   },
   {
     path: 'investor-dashboard',

@@ -2,12 +2,10 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-my-orders',
+  selector: 'app-buyer-dash',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './my-orders.component.html',
-  styleUrl: './my-orders.component.css'
+  templateUrl: './buyer-dash.component.html',
+  styleUrl: './buyer-dash.component.css'
 })
-export class MyOrdersComponent {
-
-}
+export class BuyerDashComponent {}

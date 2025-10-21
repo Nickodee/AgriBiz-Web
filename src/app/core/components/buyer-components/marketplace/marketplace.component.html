@@ -1,0 +1,68 @@
+<div class="marketplace-container">
+  <!-- Search and Filter Bar -->
+  <div class="search-bar">
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      placeholder="Search products..."
+      class="search-input"
+    >
+    <select [(ngModel)]="sortBy" class="sort-select">
+      <option value="recommended">Recommended</option>
+      <option value="price-low">Price: Low to High</option>
+      <option value="price-high">Price: High to Low</option>
+      <option value="rating">Best Rating</option>
+    </select>
+  </div>
+
+  <!-- Categories -->
+  <div class="categories">
+    <button
+      *ngFor="let category of categories"
+      [class.active]="selectedCategory === category"
+      (click)="setCategory(category)"
+      class="category-btn"
+    >
+      {{ category }}
+    </button>
+  </div>
+
+  <!-- Products Grid -->
+  <div class="products-grid">
+    <div *ngFor="let product of filteredProducts()" class="product-card">
+      <div class="product-image">
+        <img [src]="product.image" [alt]="product.name">
+        <span *ngIf="product.organic" class="organic-badge">Organic</span>
+      </div>
+
+      <div class="product-info">
+        <h3>{{ product.name }}</h3>
+        <p class="price">KES {{ product.price }} / {{ product.unit }}</p>
+        <p class="min-order">Min. Order: {{ product.minOrder }} {{ product.unit }}</p>
+        <p class="stock">In Stock: {{ product.stock }} {{ product.unit }}</p>
+        <p class="description">{{ product.description }}</p>
+
+        <div class="seller-info">
+          <img [src]="product.seller.avatar" [alt]="product.seller.name" class="seller-avatar">
+          <div class="seller-details">
+            <p class="seller-name">{{ product.seller.name }}</p>
+            <p class="seller-location">{{ product.seller.location }}</p>
+            <div class="seller-rating">
+              <span class="stars">★★★★★</span>
+              <span class="rating-value">{{ product.seller.rating }}/5</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-actions">
+          <button (click)="addToCart(product)" class="add-to-cart-btn">
+            Add to Cart
+          </button>
+          <button (click)="addToWishlist(product)" class="wishlist-btn">
+            ♡
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-my-orders',
+  selector: 'app-messages',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './my-orders.component.html',
-  styleUrl: './my-orders.component.css'
+  templateUrl: './messages.component.html',
+  styleUrl: './messages.component.css'
 })
-export class MyOrdersComponent {
+export class MessagesComponent {
 
 }
