@@ -1,1 +1,113 @@
-<p>my-orders works!</p>
+<div class="orders-container">
+  <!-- Search and Filter Bar -->
+  <div class="filters-section">
+    <div class="search-bar">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        placeholder="Search orders..."
+        class="search-input"
+      >
+      <select [(ngModel)]="sortBy" class="sort-select">
+        <option value="newest">Newest First</option>
+        <option value="oldest">Oldest First</option>
+      </select>
+    </div>
+
+    <div class="status-filters">
+      <button
+        *ngFor="let status of statusFilters"
+        [class.active]="selectedStatus === status"
+        (click)="selectedStatus = status"
+        class="status-btn"
+        [style.borderColor]="status !== 'all' ? getStatusColor(status) : ''"
+      >
+        {{ status | titlecase }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Orders List -->
+  <div class="orders-list">
+    <div *ngFor="let order of getFilteredOrders()" class="order-card">
+      <div class="order-header">
+        <div class="order-info">
+          <h3>Order #{{ order.id }}</h3>
+          <span class="order-date">{{ formatDate(order.date) }}</span>
+        </div>
+        <div class="order-status" [style.backgroundColor]="getStatusColor(order.status)">
+          {{ order.status | titlecase }}
+        </div>
+      </div>
+
+      <div class="order-items">
+        <div *ngFor="let item of order.items" class="order-item">
+          <div class="item-details">
+            <span class="item-name">{{ item.name }}</span>
+            <span class="item-quantity">{{ item.quantity }} {{ item.unit }}</span>
+          </div>
+          <div class="item-price">
+            <span>KES {{ item.pricePerUnit }} / {{ item.unit }}</span>
+            <strong>KES {{ item.totalPrice }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="seller-info">
+        <h4>Seller Information</h4>
+        <p>{{ order.seller.name }}</p>
+        <p>{{ order.seller.location }}</p>
+        <p>Contact: {{ order.seller.contact }}</p>
+      </div>
+
+      <div class="shipping-info">
+        <h4>Shipping Details</h4>
+        <p>{{ order.shippingAddress }}</p>
+        <p *ngIf="order.trackingNumber">Tracking Number: {{ order.trackingNumber }}</p>
+        <p *ngIf="order.expectedDelivery">Expected Delivery: {{ formatDate(order.expectedDelivery) }}</p>
+      </div>
+
+      <div class="order-footer">
+        <div class="total-amount">
+          <span>Total Amount:</span>
+          <strong>KES {{ order.totalAmount }}</strong>
+        </div>
+
+        <div class="order-actions">
+          <button
+            *ngIf="order.status === 'pending'"
+            (click)="cancelOrder(order.id)"
+            class="cancel-btn"
+          >
+            Cancel Order
+          </button>
+          <button
+            *ngIf="order.trackingNumber"
+            (click)="trackOrder(order.trackingNumber)"
+            class="track-btn"
+          >
+            Track Order
+          </button>
+          <button
+            (click)="downloadInvoice(order.id)"
+            class="invoice-btn"
+          >
+            Download Invoice
+          </button>
+          <button
+            *ngIf="order.status === 'delivered'"
+            (click)="reorderItems(order)"
+            class="reorder-btn"
+          >
+            Reorder
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="getFilteredOrders().length === 0" class="empty-state">
+      <p>No orders found matching your criteria</p>
+    </div>
+  </div>
+</div>
