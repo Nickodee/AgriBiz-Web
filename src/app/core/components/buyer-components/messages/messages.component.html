@@ -1,11 +1,157 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-  <h1 class="text-2xl font-semibold text-gray-900">Messages</h1>
-  <div class="mt-6">
-    <!-- Messages content will go here -->
-    <div class="bg-white shadow rounded-lg">
-      <div class="p-6">
-        <p class="text-gray-600">Messages component coming soon...</p>
+<div class="flex h-screen bg-gray-100">
+  <!-- Chat List - Hidden on mobile when chat is selected -->
+  <div class="w-full md:w-1/3 lg:w-1/4 bg-white border-r" [class.hidden]="selectedChat && isMobileView()">
+    <!-- Search Bar -->
+    <div class="p-4 border-b">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        placeholder="Search messages..."
+        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500"
+      >
+    </div>
+
+    <!-- Chat List -->
+    <div class="overflow-y-auto h-[calc(100vh-80px)]">
+      <div
+        *ngFor="let chat of getFilteredChats()"
+        (click)="selectChat(chat)"
+        class="flex items-center p-4 border-b hover:bg-gray-50 cursor-pointer"
+        [class.bg-blue-50]="selectedChat?.id === chat.id"
+      >
+        <!-- Avatar -->
+        <div class="relative">
+          <img
+            [src]="chat.avatar"
+            [alt]="chat.name"
+            class="w-12 h-12 rounded-full object-cover"
+          >
+          <span
+            *ngIf="chat.online"
+            class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"
+          ></span>
+        </div>
+
+        <!-- Chat Info -->
+        <div class="ml-4 flex-1">
+          <div class="flex justify-between items-start">
+            <h3 class="font-semibold text-gray-900">{{chat.name}}</h3>
+            <span *ngIf="chat.lastMessage" class="text-xs text-gray-500">
+              {{formatTime(chat.lastMessage.timestamp)}}
+            </span>
+          </div>
+
+          <div class="flex justify-between items-center mt-1">
+            <p class="text-sm text-gray-600 truncate max-w-[200px]">
+              {{chat.lastMessage?.text}}
+            </p>
+            <span
+              *ngIf="chat.unreadCount > 0"
+              class="bg-blue-500 text-white text-xs rounded-full px-2 py-0.5 ml-2"
+            >
+              {{chat.unreadCount}}
+            </span>
+          </div>
+
+          <span class="text-xs text-gray-500">{{chat.role}}</span>
+        </div>
       </div>
     </div>
+  </div>
+
+  <!-- Chat Area -->
+  <div class="hidden md:flex flex-1 flex-col bg-gray-50" [class.!flex]="selectedChat">
+    <!-- No Chat Selected State -->
+    <div *ngIf="!selectedChat" class="h-full flex items-center justify-center text-gray-500">
+      <p>Select a chat to start messaging</p>
+    </div>
+
+    <!-- Active Chat -->
+    <ng-container *ngIf="selectedChat">
+      <!-- Chat Header -->
+      <div class="bg-white border-b p-4 flex items-center">
+        <!-- Back Button (Mobile Only) -->
+        <button
+          class="md:hidden mr-4 text-gray-600 hover:text-gray-900"
+          (click)="selectedChat = null"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <!-- Chat Info -->
+        <div class="flex items-center">
+          <div class="relative">
+            <img
+              [src]="selectedChat.avatar"
+              [alt]="selectedChat.name"
+              class="w-10 h-10 rounded-full object-cover"
+            >
+            <span
+              *ngIf="selectedChat.online"
+              class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"
+            ></span>
+          </div>
+          <div class="ml-4">
+            <h3 class="font-semibold text-gray-900">{{selectedChat.name}}</h3>
+            <p class="text-sm text-gray-500">
+              {{selectedChat.online ? 'Online' : 'Offline'}}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Messages Area -->
+      <div #messageContainer class="flex-1 overflow-y-auto p-4 space-y-4">
+        <ng-container *ngFor="let message of messages[selectedChat.id]">
+          <div
+            class="flex"
+            [class.justify-end]="message.senderId === currentUserId"
+          >
+            <div
+              class="max-w-[75%] rounded-lg px-4 py-2 space-y-1"
+              [class.bg-blue-500]="message.senderId === currentUserId"
+              [class.text-white]="message.senderId === currentUserId"
+              [class.bg-white]="message.senderId !== currentUserId"
+            >
+              <p>{{message.text}}</p>
+              <div class="flex items-center justify-end space-x-1">
+                <span class="text-xs" [class.text-blue-100]="message.senderId === currentUserId">
+                  {{formatTime(message.timestamp)}}
+                </span>
+                <span
+                  *ngIf="message.senderId === currentUserId"
+                  [class]="getStatusColor(message.status)"
+                  class="text-xs ml-1"
+                >
+                  {{getMessageStatus(message.status)}}
+                </span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- Message Input -->
+      <div class="bg-white border-t p-4">
+        <div class="flex items-center space-x-2">
+          <input
+            type="text"
+            [(ngModel)]="newMessage"
+            (keyup.enter)="sendMessage()"
+            placeholder="Type a message..."
+            class="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500"
+          >
+          <button
+            (click)="sendMessage()"
+            [disabled]="!newMessage.trim()"
+            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Send
+          </button>
+        </div>
+      </div>
+    </ng-container>
   </div>
 </div>
