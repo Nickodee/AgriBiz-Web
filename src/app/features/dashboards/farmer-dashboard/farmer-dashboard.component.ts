@@ -10,6 +10,8 @@ import { AuthService } from '../../../core/services/auth.service';
   templateUrl: './farmer-dashboard.component.html',
   styleUrl: './farmer-dashboard.component.css'
 })
+
+
 export class FarmerDashboardComponent {
   isMobileMenuOpen = false;
   isProfileDropdownOpen = false;
@@ -26,22 +28,59 @@ export class FarmerDashboardComponent {
     this.isProfileDropdownOpen = false;
   }
 
-  // User profile data - replace with actual data from service
+  getInitials(name: string): string {
+    return name
+      .split(' ')
+      .map(word => word.charAt(0))
+      .join('')
+      .toUpperCase();
+  }
+
+  hasValidAvatar(): boolean {
+    return Boolean(this.userProfile.avatar) && this.userProfile.avatar !== 'assets/default-avatar.png' && this.userProfile.avatar !== '';
+  }
+
   userProfile = {
-    name: 'John Kamau',
-    email: 'john.kamau@agribiz.com',
-    phone: '+254 712 345 678',
-    location: 'Kiambu County, Kenya',
-    farmName: 'Kamau Coffee Farm',
-    farmSize: '5 hectares',
-    crops: ['Coffee', 'Maize', 'Beans'],
-    experience: '15 years',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    joinedDate: 'March 2022',
-    verified: true,
-    rating: 4.8,
-    totalSales: 156
+    name: '',
+    email: '',
+    phone: '',
+    location: '',
+    farmName: '',
+    farmSize: '',
+    crops: [],
+    experience: '',
+    avatar: 'assets/default-avatar.png',
+    joinedDate: '',
+    verified: false,
+    rating: 0,
+    totalSales: 0
   };
+
+  ngOnInit() {
+    this.loadUserProfile();
+  }
+
+  private loadUserProfile() {
+    const userString = localStorage.getItem('user');
+    if (userString) {
+      const userData = JSON.parse(userString);
+      this.userProfile = {
+        name: `${userData.firstName} ${userData.lastName}`,
+        email: userData.email,
+        phone: userData.phoneNumber || 'Not provided',
+        location: userData.address || 'Not provided',
+        farmName: 'My Farm', // You might want to add these fields to your user data
+        farmSize: 'Not provided',
+        crops: [], // You might want to add this to your user data
+        experience: 'Not provided',
+        avatar: userData.profileImageUrl || 'assets/default-avatar.png',
+        joinedDate: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+        verified: true, // You might want to add this to your user data
+        rating: 0, // You might want to add this to your user data
+        totalSales: 0 // You might want to add this to your user data
+      };
+    }
+  }
 
   editProfile() {
     // Navigate to profile edit page or open modal

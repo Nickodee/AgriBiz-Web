@@ -50,7 +50,14 @@
                                 id="user-menu-button"
                                 (click)="toggleProfileDropdown()">
                             <span class="sr-only">Open user menu</span>
-                            <img class="h-8 w-8 rounded-full object-cover" [src]="userProfile.avatar" [alt]="userProfile.name">
+                            <ng-container *ngIf="hasValidAvatar(); else initialsTemplate">
+                              <img class="h-8 w-8 rounded-full object-cover" [src]="userProfile.avatar" [alt]="userProfile.name">
+                            </ng-container>
+                            <ng-template #initialsTemplate>
+                              <div class="h-8 w-8 rounded-full bg-green-600 flex items-center justify-center text-white text-sm font-medium">
+                                {{ getInitials(userProfile.name) }}
+                              </div>
+                            </ng-template>
                             <svg class="ml-2 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
@@ -62,7 +69,14 @@
                             <!-- Profile Header -->
                             <div class="px-6 py-4 border-b border-gray-100">
                                 <div class="flex items-center">
-                                    <img class="h-12 w-12 rounded-full object-cover" [src]="userProfile.avatar" [alt]="userProfile.name">
+                                    <ng-container *ngIf="hasValidAvatar(); else largeInitialsTemplate">
+                                      <img class="h-12 w-12 rounded-full object-cover" [src]="userProfile.avatar" [alt]="userProfile.name">
+                                    </ng-container>
+                                    <ng-template #largeInitialsTemplate>
+                                      <div class="h-12 w-12 rounded-full bg-green-600 flex items-center justify-center text-white text-base font-medium">
+                                        {{ getInitials(userProfile.name) }}
+                                      </div>
+                                    </ng-template>
                                     <div class="ml-4 flex-1">
                                         <div class="flex items-center">
                                             <h3 class="text-lg font-semibold text-gray-900">{{ userProfile.name }}</h3>
