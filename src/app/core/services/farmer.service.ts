@@ -54,4 +54,28 @@ export class FarmerService {
   deleteCrop(farmId: string, cropId: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/farms/${farmId}/crops/${cropId}`);
   }
+
+  // Product/Produce Management
+  getMyProducts(): Observable<any> {
+    const url = `${environment.apiUrl}/api/produce/my-produce`;
+    console.log('FarmerService - Fetching products from:', url);
+    console.log('FarmerService - Auth token:', localStorage.getItem('token') ? 'Present' : 'Missing');
+    return this.http.get(url);
+  }
+
+  addProduct(productData: any): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/api/produce`, productData);
+  }
+
+  updateProduct(productId: number, productData: any): Observable<any> {
+    return this.http.put(`${environment.apiUrl}/api/produce/${productId}`, productData);
+  }
+
+  deleteProduct(productId: number): Observable<any> {
+    return this.http.delete(`${environment.apiUrl}/api/produce/${productId}`);
+  }
+
+  getProductById(productId: number): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/produce/${productId}`);
+  }
 }
