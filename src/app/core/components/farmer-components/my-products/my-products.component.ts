@@ -21,10 +21,7 @@ interface ProductForm {
   quantity: number;
   potatoBreed: string;
   location: string;
-  status: 'AVAILABLE' | 'OUT_OF_STOCK' | 'LIMITED';
-  imageUrl: string;
-  price?: number;
-  description?: string;
+  image: string;
 }
 
 @Component({
@@ -48,11 +45,12 @@ export class MyProductsComponent implements OnInit {
     quantity: 0,
     potatoBreed: '',
     location: '',
-    status: 'AVAILABLE',
-    imageUrl: '',
-    price: 0,
-    description: ''
+    image: ''
   };
+
+  // Image upload mode: 'file' or 'url'
+  imageUploadMode: 'file' | 'url' = 'file';
+  imageUrl: string = '';
 
   // Available breeds for dropdown
   potatoBreeds = [
@@ -120,13 +118,12 @@ export class MyProductsComponent implements OnInit {
       quantity: 0,
       potatoBreed: '',
       location: '',
-      status: 'AVAILABLE',
-      imageUrl: '',
-      price: 0,
-      description: ''
+      image: ''
     };
     this.imagePreview = null;
     this.selectedFile = null;
+    this.imageUrl = '';
+    this.imageUploadMode = 'file';
   }
 
   onFileSelected(event: Event) {
@@ -151,7 +148,7 @@ export class MyProductsComponent implements OnInit {
   removeImage() {
     this.imagePreview = null;
     this.selectedFile = null;
-    this.productForm.imageUrl = '';
+    this.productForm.image = '';
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     if (fileInput) {
       fileInput.value = '';
@@ -159,6 +156,8 @@ export class MyProductsComponent implements OnInit {
   }
 
   async submitProduct() {
+    console.log('Submit Product - Starting submission...');
+
     // Validate form
     if (!this.productForm.quantity || this.productForm.quantity <= 0) {
       alert('Please enter a valid quantity');
@@ -175,46 +174,64 @@ export class MyProductsComponent implements OnInit {
       return;
     }
 
-    if (!this.selectedFile && !this.productForm.imageUrl) {
+    if (this.imageUploadMode === 'file' && !this.selectedFile) {
       alert('Please upload a product image');
+      return;
+    }
+
+    if (this.imageUploadMode === 'url' && !this.imageUrl) {
+      alert('Please provide an image URL');
       return;
     }
 
     this.isLoading = true;
 
     try {
-      // Upload image to Cloudinary first if file is selected
-      if (this.selectedFile) {
+      // Upload image to Cloudinary if file mode is selected
+      if (this.imageUploadMode === 'file' && this.selectedFile) {
+        console.log('Submit Product - Uploading image to Cloudinary...');
         const imageUrl = await this.uploadImageToCloudinary(this.selectedFile);
-        this.productForm.imageUrl = imageUrl;
+        console.log('Submit Product - Image uploaded:', imageUrl);
+        this.productForm.image = imageUrl;
+      } else if (this.imageUploadMode === 'url') {
+        console.log('Submit Product - Using provided image URL:', this.imageUrl);
+        this.productForm.image = this.imageUrl;
       }
 
-      // Prepare product data (remove price field as it's not in the API)
+      // Prepare product data matching the API requirements exactly
       const productData = {
         quantity: this.productForm.quantity,
         potatoBreed: this.productForm.potatoBreed,
         location: this.productForm.location,
-        status: this.productForm.status,
-        imageUrl: this.productForm.imageUrl
+        image: this.productForm.image
       };
+
+      console.log('Submit Product - Sending data to API:', productData);
+      console.log('Submit Product - Auth token:', localStorage.getItem('token') ? 'Present' : 'Missing');
 
       // Submit product data to backend API
       this.farmerService.addProduct(productData).subscribe({
         next: (response) => {
-          console.log('Product added successfully:', response);
+          console.log('Submit Product - Success! Response:', response);
           this.isLoading = false;
           alert('Product added successfully!');
           this.closeModal();
           this.loadProducts(); // Reload products list
         },
         error: (error) => {
-          console.error('Error adding product:', error);
+          console.error('Submit Product - API Error:', error);
+          console.error('Submit Product - Error status:', error.status);
+          console.error('Submit Product - Error message:', error.message);
+          console.error('Submit Product - Error body:', error.error);
           this.isLoading = false;
-          alert('Failed to add product. Please try again.');
+
+          // More detailed error message
+          const errorMsg = error.error?.message || error.message || 'Failed to add product';
+          alert(`Failed to add product: ${errorMsg}`);
         }
       });
     } catch (error) {
-      console.error('Error uploading image:', error);
+      console.error('Submit Product - Upload Error:', error);
       alert('Failed to upload image. Please try again.');
       this.isLoading = false;
     }
@@ -223,8 +240,9 @@ export class MyProductsComponent implements OnInit {
   private async uploadImageToCloudinary(file: File): Promise<string> {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('upload_preset', 'potato-platform'); // Replace with your Cloudinary upload preset
-    formData.append('folder', 'potato-platform/produce');
+    formData.append('upload_preset', 'ml_default'); // Using default unsigned preset
+
+    console.log('Cloudinary Upload - File:', file.name, 'Size:', file.size, 'Type:', file.type);
 
     try {
       const response = await fetch('https://api.cloudinary.com/v1_1/dyovxmm4g/image/upload', {
@@ -232,11 +250,16 @@ export class MyProductsComponent implements OnInit {
         body: formData
       });
 
+      console.log('Cloudinary Response Status:', response.status, response.statusText);
+
       if (!response.ok) {
-        throw new Error('Image upload failed');
+        const errorData = await response.json();
+        console.error('Cloudinary Error Response:', errorData);
+        throw new Error(errorData.error?.message || 'Image upload failed');
       }
 
       const data = await response.json();
+      console.log('Cloudinary Success - URL:', data.secure_url);
       return data.secure_url;
     } catch (error) {
       console.error('Cloudinary upload error:', error);

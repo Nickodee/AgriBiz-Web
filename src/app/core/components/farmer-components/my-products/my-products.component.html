@@ -119,7 +119,29 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-2">
                             Product Image <span class="text-red-500">*</span>
                         </label>
-                        <div class="relative">
+
+                        <!-- Upload Mode Toggle -->
+                        <div class="flex gap-4 mb-4">
+                            <button
+                                type="button"
+                                (click)="imageUploadMode = 'file'"
+                                [class]="imageUploadMode === 'file'
+                                    ? 'px-4 py-2 bg-green-600 text-white rounded-lg font-medium'
+                                    : 'px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200'">
+                                Upload File
+                            </button>
+                            <button
+                                type="button"
+                                (click)="imageUploadMode = 'url'"
+                                [class]="imageUploadMode === 'url'
+                                    ? 'px-4 py-2 bg-green-600 text-white rounded-lg font-medium'
+                                    : 'px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200'">
+                                Use Image URL
+                            </button>
+                        </div>
+
+                        <!-- File Upload Mode -->
+                        <div *ngIf="imageUploadMode === 'file'" class="relative">
                             <input
                                 type="file"
                                 id="fileInput"
@@ -158,6 +180,22 @@
                                     class="absolute bottom-2 right-2 bg-white text-gray-700 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors shadow-lg text-sm font-medium">
                                     Change Image
                                 </button>
+                            </div>
+                        </div>
+
+                        <!-- URL Input Mode -->
+                        <div *ngIf="imageUploadMode === 'url'">
+                            <input
+                                type="url"
+                                [(ngModel)]="imageUrl"
+                                name="imageUrl"
+                                placeholder="https://example.com/image.jpg"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all mb-3">
+
+                            <!-- URL Preview -->
+                            <div *ngIf="imageUrl" class="relative rounded-lg overflow-hidden border border-gray-200">
+                                <img [src]="imageUrl" alt="Product preview" class="w-full h-64 object-cover rounded-lg"
+                                     onerror="this.src='https://via.placeholder.com/400x300?text=Invalid+Image+URL'">
                             </div>
                         </div>
                     </div>
@@ -208,114 +246,6 @@
                                 <option *ngFor="let county of counties" [value]="county">{{ county }}</option>
                             </select>
                         </div>
-
-                        <!-- Price -->
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                Price per kg (KSh) <span class="text-red-500">*</span>
-                            </label>
-                            <div class="relative">
-                                <span class="absolute left-4 top-2.5 text-gray-500 text-sm">KSh</span>
-                                <input
-                                    type="number"
-                                    [(ngModel)]="productForm.price"
-                                    name="price"
-                                    min="0"
-                                    step="0.01"
-                                    placeholder="e.g., 50.00"
-                                    class="w-full border border-gray-300 rounded-lg pl-14 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
-                            </div>
-                        </div>
-
-                        <!-- Status -->
-                        <div class="sm:col-span-2">
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                Availability Status <span class="text-red-500">*</span>
-                            </label>
-                            <div class="grid grid-cols-3 gap-3">
-                                <label class="relative flex items-center justify-center p-3 border-2 rounded-lg cursor-pointer transition-all"
-                                       [class.border-green-500]="productForm.status === 'AVAILABLE'"
-                                       [class.bg-green-50]="productForm.status === 'AVAILABLE'"
-                                       [class.border-gray-300]="productForm.status !== 'AVAILABLE'">
-                                    <input
-                                        type="radio"
-                                        [(ngModel)]="productForm.status"
-                                        name="status"
-                                        value="AVAILABLE"
-                                        class="sr-only">
-                                    <div class="text-center">
-                                        <svg class="w-6 h-6 mx-auto mb-1"
-                                             [class.text-green-600]="productForm.status === 'AVAILABLE'"
-                                             [class.text-gray-400]="productForm.status !== 'AVAILABLE'"
-                                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                        <span class="text-sm font-medium"
-                                              [class.text-green-700]="productForm.status === 'AVAILABLE'"
-                                              [class.text-gray-700]="productForm.status !== 'AVAILABLE'">Available</span>
-                                    </div>
-                                </label>
-
-                                <label class="relative flex items-center justify-center p-3 border-2 rounded-lg cursor-pointer transition-all"
-                                       [class.border-yellow-500]="productForm.status === 'LIMITED'"
-                                       [class.bg-yellow-50]="productForm.status === 'LIMITED'"
-                                       [class.border-gray-300]="productForm.status !== 'LIMITED'">
-                                    <input
-                                        type="radio"
-                                        [(ngModel)]="productForm.status"
-                                        name="status"
-                                        value="LIMITED"
-                                        class="sr-only">
-                                    <div class="text-center">
-                                        <svg class="w-6 h-6 mx-auto mb-1"
-                                             [class.text-yellow-600]="productForm.status === 'LIMITED'"
-                                             [class.text-gray-400]="productForm.status !== 'LIMITED'"
-                                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                        </svg>
-                                        <span class="text-sm font-medium"
-                                              [class.text-yellow-700]="productForm.status === 'LIMITED'"
-                                              [class.text-gray-700]="productForm.status !== 'LIMITED'">Limited</span>
-                                    </div>
-                                </label>
-
-                                <label class="relative flex items-center justify-center p-3 border-2 rounded-lg cursor-pointer transition-all"
-                                       [class.border-red-500]="productForm.status === 'OUT_OF_STOCK'"
-                                       [class.bg-red-50]="productForm.status === 'OUT_OF_STOCK'"
-                                       [class.border-gray-300]="productForm.status !== 'OUT_OF_STOCK'">
-                                    <input
-                                        type="radio"
-                                        [(ngModel)]="productForm.status"
-                                        name="status"
-                                        value="OUT_OF_STOCK"
-                                        class="sr-only">
-                                    <div class="text-center">
-                                        <svg class="w-6 h-6 mx-auto mb-1"
-                                             [class.text-red-600]="productForm.status === 'OUT_OF_STOCK'"
-                                             [class.text-gray-400]="productForm.status !== 'OUT_OF_STOCK'"
-                                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                        <span class="text-sm font-medium"
-                                              [class.text-red-700]="productForm.status === 'OUT_OF_STOCK'"
-                                              [class.text-gray-700]="productForm.status !== 'OUT_OF_STOCK'">Out of Stock</span>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Description -->
-                        <div class="sm:col-span-2">
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                Description (Optional)
-                            </label>
-                            <textarea
-                                [(ngModel)]="productForm.description"
-                                name="description"
-                                rows="4"
-                                placeholder="Add any additional details about your product..."
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all resize-none"></textarea>
-                        </div>
                     </div>
 
                     <!-- Form Summary -->
@@ -331,11 +261,10 @@
                             <div class="text-gray-600">Location:</div>
                             <div class="font-medium text-gray-900">{{ productForm.location || 'Not selected' }}</div>
 
-                            <div class="text-gray-600">Price:</div>
-                            <div class="font-medium text-gray-900">KSh {{ productForm.price || 0 }}/kg</div>
-
-                            <div class="text-gray-600">Total Value:</div>
-                            <div class="font-semibold text-green-700">KSh {{ (productForm.quantity || 0) * (productForm.price || 0) | number:'1.2-2' }}</div>
+                            <div class="text-gray-600">Image:</div>
+                            <div class="font-medium text-gray-900">
+                                {{ (imageUploadMode === 'file' && imagePreview) || (imageUploadMode === 'url' && imageUrl) ? 'Ready' : 'Not provided' }}
+                            </div>
                         </div>
                     </div>
                 </form>

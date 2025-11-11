@@ -64,7 +64,11 @@ export class FarmerService {
   }
 
   addProduct(productData: any): Observable<any> {
-    return this.http.post(`${environment.apiUrl}/api/produce`, productData);
+    const url = `${environment.apiUrl}/api/produce`;
+    console.log('FarmerService - Adding product to:', url);
+    console.log('FarmerService - Product data:', productData);
+    console.log('FarmerService - Auth token:', localStorage.getItem('token') ? 'Present' : 'Missing');
+    return this.http.post(url, productData);
   }
 
   updateProduct(productId: number, productData: any): Observable<any> {
